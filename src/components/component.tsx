@@ -1,29 +1,11 @@
-/** Add fonts into your Next.js project:
-
-import { Work_Sans } from 'next/font/google'
-import { Rubik } from 'next/font/google'
-
-work_sans({
-  subsets: ['latin'],
-  display: 'swap',
-})
-
-rubik({
-  subsets: ['latin'],
-  display: 'swap',
-})
-
-To read more about using these font, please visit the Next.js documentation:
-- App Directory: https://nextjs.org/docs/app/building-your-application/optimizing/fonts
-- Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts
-**/
+/** Add fonts into your Next.js project: import { Work_Sans } from 'next/font/google' import { Rubik } from 'next/font/google' work_sans({ subsets: ['latin'], display: 'swap', }) rubik({ subsets: ['latin'], display: 'swap', }) To read more about using these font, please visit the Next.js documentation: - App Directory: https://nextjs.org/docs/app/building-your-application/optimizing/fonts - Pages Directory: https://nextjs.org/docs/pages/building-your-application/optimizing/fonts **/
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { JSX, SVGProps } from "react"
 
 export function Component() {
   return (
-    <div className="flex flex-col min-h-[100dvh]">
+    <div className="flex flex-col min-h-[100dvh] bg-gray-300 bg-opacity-40 backdrop-filter backdrop-blur-lg">
       <header className="px-4 lg:px-6 h-14 flex items-center justify-between">
         <Link className="flex items-center" href="#">
           <HeartIcon className="h-6 w-6" />
@@ -43,7 +25,7 @@ export function Component() {
         <Button>Sign Up</Button>
       </header>
       <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
+        <section className="w-full py-12 md:py-24 lg:py-32">
           <div className="container px-4 md:px-6 text-center">
             <div className="space-y-4">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Find your perfect match</h1>
