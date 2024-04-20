@@ -47,6 +47,7 @@ export function Component() {
           <div className="container px-4 md:px-6 text-center">
             <div className="space-y-4">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Find your perfect match</h1>
+              <HeartIcon className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 text-red-600 rounded-full mix-blend-multiply filter blur-2xl opacity-80 animate-blob animation-delay-2000" />
               <p className="mx-auto max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
                 Cupid is a modern dating platform that connects you with like-minded individuals.
               </p>
@@ -186,7 +187,8 @@ function HeartIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
       width="24"
       height="24"
       viewBox="0 0 24 24"
-      fill="none"
+      // solid fill
+      fill="currentColor"
       stroke="currentColor"
       strokeWidth="2"
       strokeLinecap="round"
