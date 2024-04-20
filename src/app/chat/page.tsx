@@ -23,8 +23,14 @@ const message = {
 
 export const Page = () => {
   return (
-    <div className="">
+    <div className="flex bg-gray-100 dark:bg-gray-900 p-5">
+      <div className=" bg-gray-100 dark:bg-gray-900 p-5">
+        <Back before="leaderboard" />
+      </div>
       <Chat {...message} />
+      <div className=" bg-gray-100 dark:bg-gray-900 p-5 invisible">
+        <Back before="profile" />
+      </div>
     </div>
   );
 };

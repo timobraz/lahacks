@@ -201,7 +201,7 @@ export function Profile() {
             <Button className="w-full" type="submit">
               Save Profile
             </Button>
-            <Next after="/leaderboard" />
+            <Next after="/aichat" />
           </div>
         </div>
       </div>
