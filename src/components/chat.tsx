@@ -1,4 +1,5 @@
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
+import { Back } from "@/components/back";
 
 interface ChatProps {
   messages: Message[];
@@ -14,7 +15,10 @@ interface ChatProps {
 
 export function Chat({ messages }: ChatProps) {
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center bg-gray-100 dark:bg-gray-900">
+    <div className="flex h-screen w-full flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-5">
+      <div className="absolute top-5 left-5">
+        <Back before="leaderboard" />
+      </div>
       <div className="flex w-full max-w-4xl flex-1 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-800">
         <div className="flex flex-1 flex-col">
           <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-gray-700">

@@ -13,6 +13,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { useState } from "react";
+import Link from "next/link";
+import { Back } from "./back";
+import { Next } from "./next";
 
 export function Profile() {
   function capitalizeFirstLetter(string: string) {
@@ -33,6 +36,9 @@ export function Profile() {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   return (
     <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-2">
+      <div className="absolute top-5 left-5">
+        <Back before="/" />
+      </div>
       <div className="flex items-center justify-center bg-gray-100 p-6 dark:bg-gray-800 lg:p-12">
         <div className="w-full max-w-md space-y-6">
           <div className="space-y-2">
@@ -191,9 +197,12 @@ export function Profile() {
               width={300}
             />
           </div>
-          <Button className="w-full" type="submit">
-            Save Profile
-          </Button>
+          <div className="flex items-center justify-center gap-5">
+            <Button className="w-full" type="submit">
+              Save Profile
+            </Button>
+            <Next after="/leaderboard" />
+          </div>
         </div>
       </div>
       <div className="flex justify-center bg-gray-50 p-6 dark:bg-gray-900 pt-16">

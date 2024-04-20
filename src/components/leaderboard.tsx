@@ -2,6 +2,7 @@ import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { JSX, SVGProps } from "react";
+import Link from "next/link";
 
 interface MatchProps {
   matches: Matches[];
@@ -13,7 +14,7 @@ interface Matches {
 
 export function Leaderboard({ matches }: MatchProps) {
   return (
-    <div className="mx-auto max-w-2xl space-y-6 p-4 md:p-6">
+    <div className="mx-auto w-full max-w-2xl space-y-6 p-4 ">
       <div className="space-y-2">
         <h2 className="text-2xl font-bold text-[#2e2e2e]">Top Matches</h2>
         <p className="text-gray-500 dark:text-gray-400">
@@ -47,10 +48,12 @@ export function Leaderboard({ matches }: MatchProps) {
                     />
                   </div>
                 </div>
-                <Button size="icon" variant="outline">
-                  <ArrowRightIcon className="h-4 w-4" />
-                  <span className="sr-only">View {match.name}</span>
-                </Button>
+                <Link href="/chat">
+                  <Button size="icon" variant="outline">
+                    <ArrowRightIcon className="h-4 w-4" />
+                    <span className="sr-only">View {match.name}</span>
+                  </Button>
+                </Link>
               </div>
             );
           })}

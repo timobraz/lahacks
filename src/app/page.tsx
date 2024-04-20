@@ -40,9 +40,6 @@ export default function Home() {
   return (
     <main className="font-">
       <Component />
-      <Chat {...message} />
-      <Leaderboard {...matches} />
-      <Profile />
     </main>
   );
 }
