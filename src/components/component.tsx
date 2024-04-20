@@ -1,16 +1,20 @@
 import Link from "next/link";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { JSX, SVGProps } from "react";
+import Image from "next/image";
 
 export function Component() {
   return (
-    <div className="flex flex-col min-h-[100dvh]">
-      <header className="px-4 lg:px-6 h-14 flex items-center justify-between">
+    <div
+      className="flex flex-col min-h-[100vh] bg-cover bg-center"
+      style={{ backgroundImage: "url('/background.png')" }}
+    >
+      <header className="lg:px-12 h-[100px] flex items-center justify-between">
         <Link className="flex items-center justify-center" href="#">
           <HeartIcon className="h-6 w-6" />
           <span className="sr-only">Dating Site</span>
         </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
+        <nav className="ml-auto flex gap-12 text-[#2e2e2e]">
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
             href="#"
@@ -36,23 +40,23 @@ export function Component() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-8xl/none font-corm">
+                <h1 className="text-3xl text-[#2e2e2e] sm:text-4xl md:text-5xl lg:text-[105px]/none font-corm z-5">
                   Find Your Perfect Match
                 </h1>
-                <p className="mx-auto max-w-[700px] font-light tracking-wide text-gray-500 md:text-xl dark:text-gray-400 font-inter">
+                <p className="mx-auto max-w-[600px] font-light tracking-wide text-[#2e2e2e] md:text-xl dark:text-gray-400 font-inter">
                   Discover compatible singles in your area and start building
                   meaningful connections.
                 </p>
               </div>
               <div className="space-x-4">
                 <Link
-                  className="inline-flex h-9 items-center justify-center rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+                  className="inline-flex h-9 items-center justify-center rounded-md bg-[#2e2e2e] px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
                   href="#"
                 >
                   Start Matching
                 </Link>
                 <Link
-                  className="inline-flex h-9 items-center justify-center rounded-md border border-gray-200 border-gray-200 bg-white px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-800 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
+                  className="inline-flex h-9 items-center justify-center rounded-md border border-gray-200 text-[#2e2e2e] bg-white px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:border-gray-800 dark:border-gray-800 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus-visible:ring-gray-300"
                   href="#"
                 >
                   Learn More
@@ -63,7 +67,7 @@ export function Component() {
         </section>
         <section className="w-full py-12 md:py-24 lg:py-32"></section>
       </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
+      <footer className="flex flex-col gap-2 sm:flex-row py-2 w-full shrink-0 items-center px-4 md:px-6 border-t">
         <p className="text-xs text-gray-500 dark:text-gray-400">
           © 2024 Dating Site. All rights reserved.
         </p>
