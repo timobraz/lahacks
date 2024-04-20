@@ -16,11 +16,7 @@ const rubik = Rubik({
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <html lang="en">
-        <body className={work_sans.variable + rubik.variable}>
           <Component />
-        </body>
-      </html>
     </main>
   );
 }
