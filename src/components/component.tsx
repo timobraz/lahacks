@@ -27,7 +27,7 @@ export function Component() {
       <header className="px-4 lg:px-6 h-14 flex items-center justify-between">
         <Link className="flex items-center" href="#">
           <HeartIcon className="h-6 w-6" />
-          <span className="sr-only">Cupid</span>
+          <span className="sr-only">Freeze</span>
         </Link>
         <nav className="hidden lg:flex gap-4 sm:gap-6">
           <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
@@ -55,117 +55,9 @@ export function Component() {
             </div>
           </div>
         </section>
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="flex flex-col items-center text-center space-y-2">
-                <img
-                  alt="Profile"
-                  className="rounded-full"
-                  height="80"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "80/80",
-                    objectFit: "cover",
-                  }}
-                  width="80"
-                />
-                <h3 className="text-lg font-semibold">Jane Doe</h3>
-                <p className="text-gray-500 dark:text-gray-400 line-clamp-2">
-                  Hi, I'm Jane! I love traveling, trying new foods, and spending time with my friends.
-                </p>
-              </div>
-              <div className="flex flex-col items-center text-center space-y-2">
-                <img
-                  alt="Profile"
-                  className="rounded-full"
-                  height="80"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "80/80",
-                    objectFit: "cover",
-                  }}
-                  width="80"
-                />
-                <h3 className="text-lg font-semibold">John Smith</h3>
-                <p className="text-gray-500 dark:text-gray-400 line-clamp-2">
-                  Hey there! I'm John, an adventurous soul who enjoys hiking, photography, and good conversation.
-                </p>
-              </div>
-              <div className="flex flex-col items-center text-center space-y-2">
-                <img
-                  alt="Profile"
-                  className="rounded-full"
-                  height="80"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "80/80",
-                    objectFit: "cover",
-                  }}
-                  width="80"
-                />
-                <h3 className="text-lg font-semibold">Emily Johnson</h3>
-                <p className="text-gray-500 dark:text-gray-400 line-clamp-2">
-                  Hi, I'm Emily! I'm passionate about art, music, and learning new things. Let's connect!
-                </p>
-              </div>
-              <div className="flex flex-col items-center text-center space-y-2">
-                <img
-                  alt="Profile"
-                  className="rounded-full"
-                  height="80"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "80/80",
-                    objectFit: "cover",
-                  }}
-                  width="80"
-                />
-                <h3 className="text-lg font-semibold">Michael Brown</h3>
-                <p className="text-gray-500 dark:text-gray-400 line-clamp-2">
-                  Hey, I'm Michael! I enjoy outdoor activities, reading, and intellectual discussions.
-                </p>
-              </div>
-              <div className="flex flex-col items-center text-center space-y-2">
-                <img
-                  alt="Profile"
-                  className="rounded-full"
-                  height="80"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "80/80",
-                    objectFit: "cover",
-                  }}
-                  width="80"
-                />
-                <h3 className="text-lg font-semibold">Sarah Davis</h3>
-                <p className="text-gray-500 dark:text-gray-400 line-clamp-2">
-                  Hi, I'm Sarah! I'm a passionate foodie, avid reader, and lover of all things outdoors.
-                </p>
-              </div>
-              <div className="flex flex-col items-center text-center space-y-2">
-                <img
-                  alt="Profile"
-                  className="rounded-full"
-                  height="80"
-                  src="/placeholder.svg"
-                  style={{
-                    aspectRatio: "80/80",
-                    objectFit: "cover",
-                  }}
-                  width="80"
-                />
-                <h3 className="text-lg font-semibold">David Lee</h3>
-                <p className="text-gray-500 dark:text-gray-400 line-clamp-2">
-                  Hey there! I'm David, a tech enthusiast who enjoys gaming, coding, and exploring new hobbies.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-gray-500 dark:text-gray-400">© 2024 Cupid. All rights reserved.</p>
+      <footer className="flex gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
+        <p className="text-xs text-gray-500 dark:text-gray-400">© 2024 Freeze. All rights reserved.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs hover:underline underline-offset-4" href="#">
             Terms of Service
