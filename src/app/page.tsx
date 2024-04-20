@@ -1,12 +1,4 @@
-import { Work_Sans } from "next/font/google";
-import { Rubik } from "next/font/google";
 import { Component } from "@/components/component";
-
-import { Cormorant_Garamond } from "next/font/google";
-import { Libre_Franklin } from "next/font/google";
-import { Chat } from "@/components/chat";
-import { Leaderboard } from "@/components/leaderboard";
-import { Profile } from "@/components/profile";
 
 const message = {
   messages: [
