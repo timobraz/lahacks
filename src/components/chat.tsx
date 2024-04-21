@@ -16,9 +16,7 @@ export interface Message {
   id: number;
 }
 
-function SendIcon(
-  props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>
-) {
+function SendIcon(props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
@@ -60,11 +58,7 @@ export function Chat({ channelId }: ChatProps) {
   };
   const fetchCoversation = async (channelId: string) => {
     try {
-      let { data: conversations } = await supabase
-        .from("conversations")
-        .select(`*, user1(*), user2(*)`)
-        .eq("id", channelId)
-        .single();
+      let { data: conversations } = await supabase.from("conversations").select(`*, user1(*), user2(*)`).eq("id", channelId).single();
       console.log(conversations);
       setConversation(conversations);
     } catch (error) {
@@ -73,20 +67,18 @@ export function Chat({ channelId }: ChatProps) {
   };
 
   useEffect(() => {
-    fetchMessages(channelId);
-    fetchCoversation(channelId);
-    const messageListener = supabase
-      .channel("public:messages")
-      .on(
-        "postgres_changes",
-        { event: "INSERT", schema: "public", table: "messages" },
-        (payload) => handleNewMessage(payload.new)
-      )
-      .subscribe();
+    if (channelId) {
+      fetchMessages(channelId);
+      fetchCoversation(channelId);
+      const messageListener = supabase
+        .channel("public:messages")
+        .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, (payload) => handleNewMessage(payload.new))
+        .subscribe();
 
-    return () => {
-      messageListener.unsubscribe();
-    };
+      return () => {
+        messageListener.unsubscribe();
+      };
+    }
   }, [channelId]);
 
   useEffect(() => {
@@ -111,9 +103,7 @@ export function Chat({ channelId }: ChatProps) {
               </Avatar>
               <div>
                 <div className="font-medium">{conversation?.user1.name}</div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Online
-                </div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Online</div>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -123,27 +113,18 @@ export function Chat({ channelId }: ChatProps) {
               </Avatar>
               <div>
                 <div className="font-medium">{conversation?.user2.name}</div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Online
-                </div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Online</div>
               </div>
             </div>
           </div>
           <div className="flex-1 overflow-y-auto p-6">
             {messages === null || messages.length === 0 ? (
-              <div className="text-center text-gray-500 dark:text-gray-400">
-                No messages yet. Start a new conversation!
-              </div>
+              <div className="text-center text-gray-500 dark:text-gray-400">No messages yet. Start a new conversation!</div>
             ) : (
               <div className="grid gap-4">
                 {messages.map((message, index) => {
                   return (
-                    <div
-                      key={index}
-                      className={`flex items-start space-x-4 ${
-                        message.author.id === 1 ? "" : "justify-end"
-                      }`}
-                    >
+                    <div key={index} className={`flex items-start space-x-4 ${message.author.id === 1 ? "" : "justify-end"}`}>
                       {message.author.id === 1 ? (
                         <Avatar>
                           <AvatarImage alt="Chatbot 1" src="/chatbot1.png" />
@@ -154,12 +135,8 @@ export function Chat({ channelId }: ChatProps) {
                       )}
                       <div
                         className={`flex-1 space-y-2 ${
-                          message.author.id === 1
-                            ? "bg-gray-100 dark:bg-gray-700"
-                            : "bg-[#FFA7A7]"
-                        } rounded-lg p-4 text-sm ${
-                          message.author.id === 1 ? "" : "text-white"
-                        }`}
+                          message.author.id === 1 ? "bg-gray-100 dark:bg-gray-700" : "bg-[#FFA7A7]"
+                        } rounded-lg p-4 text-sm ${message.author.id === 1 ? "" : "text-white"}`}
                       >
                         <p>{message.message}</p>
                       </div>
