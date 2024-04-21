@@ -43,7 +43,6 @@ export function Profile() {
           location: location,
           interests: interests,
           bio: bio,
-          pfp: null,
           images: uploadedImages,
         },
       ])
