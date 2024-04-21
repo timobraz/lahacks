@@ -1,15 +1,19 @@
-import uuid, requests, json
+import uuid, requests, json, sys
 from ai_engine import KeyValue, UAgentResponse, UAgentResponseType
 from uagents.setup import fund_agent_if_low
 from uagents import Agent, Context, Protocol, Model
 from typing import Optional, List
 
+i = int(sys.argv[1])
+
 gemini = Agent(
     name="gemini",
-    port=8800,
-    seed="google gemini secret QtAB24dYye",
-    endpoint=["http://localhost:8800/submit"]
+    port=8800 + i,
+    seed=f"google {i} gemini secret QtAB24dYye",
+    endpoint=f"http://localhost:{8800 + i}/submit"
 )
+
+print(f"gemini address: {gemini.address}")
 
 gemini_protocol = Protocol("Gemini")
 
@@ -73,7 +77,6 @@ async def on_message(ctx: Context, sender: str, msg: GeminiRequest):
                 }],
                 "safetySettings": safety_settings,
             }
-            response = requests.post(gemini_url, headers=headers, data=json.dumps(data))
         elif msg.chat_history != None:
             gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={msg.api_key}"
             data = {
@@ -100,14 +103,14 @@ async def on_message(ctx: Context, sender: str, msg: GeminiRequest):
             return
 
         ctx.logger.info(json.dumps(data))
-        response = requests.post(gemini_url, headers=headers, data=json.dumps(data))
-        ctx.logger.info(response.json())
+        response = requests.post(gemini_url, headers=headers, data=json.dumps(data)).json()
+        ctx.logger.info(response)
 
-        if "error" in response.json():
-            await ctx.send(sender, UAgentResponse(message=response.json()["error"]["message"], type=UAgentResponseType.ERROR))
+        if "error" in response:
+            await ctx.send(sender, UAgentResponse(message=response["error"]["message"], type=UAgentResponseType.ERROR))
             return
         
-        message = response.json()["candidates"][0]["content"]["parts"][0]["text"]
+        message = response["candidates"][0]["content"]["parts"][0]["text"]
         await ctx.send(sender, UAgentResponse(message=message, type=UAgentResponseType.FINAL, request_id=request_id))
     except Exception as e:
         ctx.logger.error(e)
@@ -115,6 +118,8 @@ async def on_message(ctx: Context, sender: str, msg: GeminiRequest):
 
 gemini.include(gemini_protocol, publish_manifest=True)
 
-if __name__ == "__main__":
-    fund_agent_if_low(gemini.wallet.address())
-    gemini.run()
+fund_agent_if_low(gemini.wallet.address())
+gemini.run()
+
+# for i in {0..9}; do python agent.py $i & done
+# pkill -f agent.py
