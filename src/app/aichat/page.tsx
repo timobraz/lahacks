@@ -25,33 +25,13 @@ const message = {
     ],
 };
 
-function SendIcon(props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) {
-    return (
-        <svg
-            {...props}
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-        >
-            <path d="m22 2-7 20-4-9-9-4Z" />
-            <path d="M22 2 11 13" />
-        </svg>
-    )
-};
-
 export const Page = () => {
     return (
         <div className="flex bg-gray-100 dark:bg-gray-900 p-5">
             <div className=" bg-gray-100 dark:bg-gray-900 p-5">
                 <Back before="profile" />
             </div>
-            <Chat {...message} />
+            <Chat channelId={""} {...message} />
             
             <div className="ml-auto bg-gray-100 dark:bg-gray-900 p-5">
                 <Next after="leaderboard" />

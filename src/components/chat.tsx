@@ -6,7 +6,6 @@ import { Dispatch, useEffect, useState } from "react";
 import { Conversation } from "./leaderboard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { SendIcon } from "@/components/ui/icons";
 
 export interface Message {
   author: {
@@ -16,6 +15,26 @@ export interface Message {
   message: string;
   id: number;
 }
+
+function SendIcon(props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="m22 2-7 20-4-9-9-4Z" />
+      <path d="M22 2 11 13" />
+    </svg>
+  )
+};
 
 interface ChatProps {
   channelId: string;
@@ -100,37 +119,49 @@ export function Chat({ channelId }: ChatProps) {
             </div>
           </div>
           <div className="flex-1 overflow-y-auto p-6">
-            <div className="grid gap-4">
-              {messages.map((message, index) => {
-                return (
-                  <div key={index} className={`flex items-start space-x-4 ${message.author.id === 1 ? "" : "justify-end"}`}>
-                    {message.author.id === 1 ? (
-                      <Avatar>
-                        <AvatarImage alt="Chatbot 1" src="/chatbot1.png" />
-                        <AvatarFallback>CB1</AvatarFallback>
-                      </Avatar>
-                    ) : (
-                      <div className="flex-1 space-y-2"></div>
-                    )}
+            {messages === null || messages.length === 0 ? (
+              <div className="text-center text-gray-500 dark:text-gray-400">
+                No messages yet. Start a new conversation!
+              </div>
+            ) : (
+              <div className="grid gap-4">
+                {messages.map((message, index) => {
+                  return (
                     <div
-                      className={`flex-1 space-y-2 ${
-                        message.author.id === 1 ? "bg-gray-100 dark:bg-gray-700" : "bg-[#FFA7A7]"
-                      } rounded-lg p-4 text-sm ${message.author.id === 1 ? "" : "text-white"}`}
+                      key={index}
+                      className={`flex items-start space-x-4 ${message.author.id === 1 ? "" : "justify-end"
+                        }`}
                     >
-                      <p>{message.message}</p>
+                      {message.author.id === 1 ? (
+                        <Avatar>
+                          <AvatarImage alt="Chatbot 1" src="/chatbot1.png" />
+                          <AvatarFallback>CB1</AvatarFallback>
+                        </Avatar>
+                      ) : (
+                        <div className="flex-1 space-y-2"></div>
+                      )}
+                      <div
+                        className={`flex-1 space-y-2 ${message.author.id === 1
+                            ? "bg-gray-100 dark:bg-gray-700"
+                            : "bg-[#FFA7A7]"
+                          } rounded-lg p-4 text-sm ${message.author.id === 1 ? "" : "text-white"
+                          }`}
+                      >
+                        <p>{message.message}</p>
+                      </div>
+                      {message.author.id === 2 ? (
+                        <Avatar>
+                          <AvatarImage alt="Chatbot 2" src="/chatbot2.png" />
+                          <AvatarFallback>CB2</AvatarFallback>
+                        </Avatar>
+                      ) : (
+                        <div className="flex-1 space-y-2"></div>
+                      )}
                     </div>
-                    {message.author.id === 2 ? (
-                      <Avatar>
-                        <AvatarImage alt="Chatbot 2" src="/chatbot2.png" />
-                        <AvatarFallback>CB2</AvatarFallback>
-                      </Avatar>
-                    ) : (
-                      <div className="flex-1 space-y-2"></div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
           <div className="border-t border-gray-200 dark:border-gray-800 p-3">
             <form className="flex items-center gap-2">
