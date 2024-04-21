@@ -6,6 +6,14 @@ import { Next } from "@/components/next";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+import { useChat } from "ai/react";
+import Image from "next/image";
+import { ChangeEvent, useState } from "react";
+import SelectedImages from "@/components/selectedImages";
+import Messages from "@/components/messages";
+import InputForm from "@/components/inputForm"
+import { AIChat } from "@/components/aichat";
+
 const message = {
   messages: [
     { author: "bot1", message: "Hi I am bot1" },
@@ -26,6 +34,10 @@ const message = {
 };
 
 export const Page = () => {
+  const { messages, input, handleInputChange, handleSubmit, isLoading, stop } =
+    useChat({
+      api: "/api/genai",
+    });
   return (
     <div className="flex bg-gray-100 dark:bg-gray-900 p-5 h-screen">
       <div className=" bg-gray-100 dark:bg-gray-900 p-5">
@@ -39,7 +51,8 @@ export const Page = () => {
           </div>
         </div>
         <div className="h-2/3 w-full">
-          <Chat channelId={""} {...message} />
+          <AIChat/>
+          {/* <Chat channelId={""} {...message} /> */}
         </div>
       </div>
 
