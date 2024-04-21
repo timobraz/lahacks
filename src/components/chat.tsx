@@ -16,7 +16,9 @@ export interface Message {
   id: number;
 }
 
-function SendIcon(props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>) {
+function SendIcon(
+  props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGElement>
+) {
   return (
     <svg
       {...props}
@@ -33,8 +35,8 @@ function SendIcon(props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGEl
       <path d="m22 2-7 20-4-9-9-4Z" />
       <path d="M22 2 11 13" />
     </svg>
-  )
-};
+  );
+}
 
 interface ChatProps {
   channelId: string;
@@ -58,7 +60,11 @@ export function Chat({ channelId }: ChatProps) {
   };
   const fetchCoversation = async (channelId: string) => {
     try {
-      let { data: conversations } = await supabase.from("conversations").select(`*, user1(*), user2(*)`).eq("id", channelId).single();
+      let { data: conversations } = await supabase
+        .from("conversations")
+        .select(`*, user1(*), user2(*)`)
+        .eq("id", channelId)
+        .single();
       console.log(conversations);
       setConversation(conversations);
     } catch (error) {
@@ -71,7 +77,11 @@ export function Chat({ channelId }: ChatProps) {
     fetchCoversation(channelId);
     const messageListener = supabase
       .channel("public:messages")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, (payload) => handleNewMessage(payload.new))
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "messages" },
+        (payload) => handleNewMessage(payload.new)
+      )
       .subscribe();
 
     return () => {
@@ -101,7 +111,9 @@ export function Chat({ channelId }: ChatProps) {
               </Avatar>
               <div>
                 <div className="font-medium">{conversation?.user1.name}</div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">Online</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Online
+                </div>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -111,7 +123,9 @@ export function Chat({ channelId }: ChatProps) {
               </Avatar>
               <div>
                 <div className="font-medium">{conversation?.user2.name}</div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">Online</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Online
+                </div>
               </div>
             </div>
           </div>
@@ -126,8 +140,9 @@ export function Chat({ channelId }: ChatProps) {
                   return (
                     <div
                       key={index}
-                      className={`flex items-start space-x-4 ${message.author.id === 1 ? "" : "justify-end"
-                        }`}
+                      className={`flex items-start space-x-4 ${
+                        message.author.id === 1 ? "" : "justify-end"
+                      }`}
                     >
                       {message.author.id === 1 ? (
                         <Avatar>
@@ -138,11 +153,13 @@ export function Chat({ channelId }: ChatProps) {
                         <div className="flex-1 space-y-2"></div>
                       )}
                       <div
-                        className={`flex-1 space-y-2 ${message.author.id === 1
+                        className={`flex-1 space-y-2 ${
+                          message.author.id === 1
                             ? "bg-gray-100 dark:bg-gray-700"
                             : "bg-[#FFA7A7]"
-                          } rounded-lg p-4 text-sm ${message.author.id === 1 ? "" : "text-white"
-                          }`}
+                        } rounded-lg p-4 text-sm ${
+                          message.author.id === 1 ? "" : "text-white"
+                        }`}
                       >
                         <p>{message.message}</p>
                       </div>
