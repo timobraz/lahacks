@@ -2,6 +2,8 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { RadioGroupItem, RadioGroup } from "@/components/ui/radio-group";
+import { JSX, SVGProps } from "react";
+
 import {
   SelectValue,
   SelectTrigger,
@@ -22,9 +24,9 @@ export function Profile() {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
   const [name, setName] = useState("John Doe");
-  const [age, setAge] = useState(18);
-  const [gender, setGender] = useState("");
-  const [genderPreference, setGenderPreference] = useState("");
+  const [age, setAge] = useState("18");
+  const [gender, setGender] = useState("Male");
+  const [genderPreference, setGenderPreference] = useState("Female");
   const [musicTaste, setMusicTaste] = useState("Rock");
   const [location, setLocation] = useState("San Fransisco, CA");
   const [interests, setInterests] = useState(
@@ -34,174 +36,119 @@ export function Profile() {
     "Hi, I'm John! I'm a passionate outdoorsman who loves hiking, camping, and exploring new places. In my free time, you can find me reading, listening to music, or trying out new recipes in the kitchen. I'm looking to connect with like-minded individuals who share my love for adventure and personal growth. If you're interested in getting to know me better, feel free to reach out!"
   );
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
+
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+
+  const showNextQuestion = () => {
+    setCurrentQuestion((prevQuestion) => {
+      if (prevQuestion < questions.length - 1) {
+        return prevQuestion + 1;
+      }
+      return prevQuestion;
+    });
+  };
+  const showPreviousQuestion = () => {
+    setCurrentQuestion((prevQuestion) => {
+      if (prevQuestion > 0) {
+        return prevQuestion - 1;
+      }
+      return prevQuestion;
+    });
+  };
+
+  const questions = [
+    { question: "Name", placeholder: "Enter your name", function: setName },
+    { question: "Age", placeholder: "Enter your age", function: setAge },
+    {
+      question: "Gender",
+      placeholder: "Enter your gender",
+      function: setGender,
+    },
+    {
+      question: "Gender Preference",
+      placeholder: "Enter gender preference",
+      function: setGenderPreference,
+    },
+    {
+      question: "Location",
+      placeholder: "Enter your location",
+      function: setLocation,
+    },
+    {
+      question: "Music Taste",
+      placeholder: "What kind of music do you like?",
+      function: setMusicTaste,
+    },
+    {
+      question: "Interests",
+      placeholder: "Hobbies? Interests?, etc",
+      function: setInterests,
+    },
+    {
+      question: "Bio",
+      placeholder: "Tell the world a bit about yourself",
+      function: setBio,
+    },
+  ];
+
   return (
     <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-2">
       <div className="absolute top-5 left-5">
         <Back before="/" />
       </div>
-      <div className="flex items-center justify-center bg-gray-100 p-6 dark:bg-gray-800 lg:p-12">
-        <div className="w-full max-w-md space-y-6">
-          <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              placeholder="Enter your name"
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="age">Age</Label>
-            <Input
-              id="age"
-              placeholder="Enter your age"
-              type="number"
-              onChange={(e) => setAge(parseInt(e.target.value))}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="gender">Gender</Label>
-            <RadioGroup
-              className="flex items-center gap-4"
-              defaultValue="male"
-              id="gender"
-            >
-              <Label
-                className="flex items-center gap-2 cursor-pointer"
-                htmlFor="gender-male"
+      <div className="flex items-center justify-center gap-[100px] bg-gray-100 p-6 dark:bg-gray-800 lg:p-12 w-full flex-col">
+        <div className="text-5xl text-center font-corm">
+          Fill out basic information first...
+        </div>
+        <div className="flex flex-col items-center justify-center w-full -mt-5 mb-[200px]">
+          {questions.map(
+            (
+              eachQuestion: { question: string; placeholder: string },
+              index: number
+            ) => (
+              <div
+                key={index}
+                className={`question w-2/3 ${
+                  index !== currentQuestion ? "hidden" : ""
+                }`}
               >
-                <RadioGroupItem id="gender-male" value="male" />
-                Male
-              </Label>
-              <Label
-                className="flex items-center gap-2 cursor-pointer"
-                htmlFor="gender-female"
+                <div className="space-y-2 w-full ">
+                  <Label htmlFor="name">{questions[index].question}</Label>
+                  <Textarea
+                    className=""
+                    id="name"
+                    placeholder={questions[index].placeholder}
+                    onChange={(e) => questions[index].function(e.target.value)}
+                  />
+                </div>
+              </div>
+            )
+          )}
+          <div className="flex justify-between w-2/3">
+            <div className="flex items-center gap-2 mt-5">
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={showPreviousQuestion}
+                disabled={currentQuestion === 0}
               >
-                <RadioGroupItem id="gender-female" value="female" />
-                Female
-              </Label>
-              <Label
-                className="flex items-center gap-2 cursor-pointer"
-                htmlFor="gender-other"
+                <ArrowRightIcon className="h-4 w-4 rotate-180" />
+                <span className="sr-only">Previous</span>
+              </Button>
+              <span className="text-sm font-medium">Previous</span>
+            </div>
+            <div className="flex items-center gap-2 mt-5">
+              <span className="text-sm font-medium">Next</span>
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={showNextQuestion}
+                disabled={currentQuestion === questions.length - 1}
               >
-                <RadioGroupItem id="gender-other" value="other" />
-                Other
-              </Label>
-            </RadioGroup>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="gender-preference">Gender Preference</Label>
-            <RadioGroup
-              className="flex items-center gap-4"
-              defaultValue="any"
-              id="gender-preference"
-            >
-              <Label
-                className="flex items-center gap-2 cursor-pointer"
-                htmlFor="gender-preference-any"
-              >
-                <RadioGroupItem id="gender-preference-any" value="any" />
-                Any
-              </Label>
-              <Label
-                className="flex items-center gap-2 cursor-pointer"
-                htmlFor="gender-preference-male"
-              >
-                <RadioGroupItem id="gender-preference-male" value="male" />
-                Male
-              </Label>
-              <Label
-                className="flex items-center gap-2 cursor-pointer"
-                htmlFor="gender-preference-female"
-              >
-                <RadioGroupItem id="gender-preference-female" value="female" />
-                Female
-              </Label>
-            </RadioGroup>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="music-taste">Music Taste</Label>
-            <Select
-              defaultValue="rock"
-              onValueChange={(value) =>
-                setMusicTaste(capitalizeFirstLetter(value))
-              }
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select music taste" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="rock">Rock</SelectItem>
-                <SelectItem value="pop">Pop</SelectItem>
-                <SelectItem value="classical">Classical</SelectItem>
-                <SelectItem value="hip-hop">Hip-Hop</SelectItem>
-                <SelectItem value="electronic">Electronic</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="location">Location</Label>
-            <Input
-              id="location"
-              onChange={(e) => setLocation(e.target.value)}
-              placeholder="Enter your location"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="location">Interests</Label>
-            <Input
-              id="location"
-              onChange={(e) => setInterests(e.target.value)}
-              placeholder="Tell us about your interests"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="interests">Bio</Label>
-            <Textarea
-              className="min-h-[120px]"
-              id="interests"
-              placeholder="Tell us about yourself"
-              onChange={(e) => setBio(e.target.value)}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="profile-picture">Profile Picture</Label>
-            <Input id="profile-picture" type="file" />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <img
-              alt="Image 1"
-              className="aspect-video rounded-md object-cover"
-              height={200}
-              src="/placeholder.svg"
-              width={300}
-            />
-            <img
-              alt="Image 2"
-              className="aspect-video rounded-md object-cover"
-              height={200}
-              src="/placeholder.svg"
-              width={300}
-            />
-            <img
-              alt="Image 3"
-              className="aspect-video rounded-md object-cover"
-              height={200}
-              src="/placeholder.svg"
-              width={300}
-            />
-            <img
-              alt="Image 4"
-              className="aspect-video rounded-md object-cover"
-              height={200}
-              src="/placeholder.svg"
-              width={300}
-            />
-          </div>
-          <div className="flex items-center justify-center gap-5">
-            <Button className="w-full" type="submit">
-              Save Profile
-            </Button>
-            <Next after="/leaderboard" />
+                <ArrowRightIcon className="h-4 w-4 " />
+                <span className="sr-only">Next</span>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -220,14 +167,14 @@ export function Profile() {
               <div className="text-gray-500 dark:text-gray-400">
                 {age} years old
               </div>
-              <div className="text-gray-500 dark:text-gray-400">Male</div>
+              <div className="text-gray-500 dark:text-gray-400">{gender}</div>
               <div className="text-gray-500 dark:text-gray-400">
-                Interested in Any
+                Interested in {genderPreference}
               </div>
+              <div className="text-gray-500 dark:text-gray-400">{location}</div>
               <div className="text-gray-500 dark:text-gray-400">
                 {musicTaste} music
               </div>
-              <div className="text-gray-500 dark:text-gray-400">{location}</div>
             </div>
           </div>
           <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
@@ -270,5 +217,27 @@ export function Profile() {
         </div>
       </div>
     </div>
+  );
+}
+
+function ArrowRightIcon(
+  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
+) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    </svg>
   );
 }
