@@ -1,23 +1,76 @@
+"use client";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { Back } from "@/components/back";
+import { supabase } from "@/lib/supabase";
+import { Dispatch, useEffect, useState } from "react";
+import { Conversation } from "./leaderboard";
 
-interface ChatProps {
-  messages: Message[];
-}
-interface Message {
-  author: string;
+export interface Message {
+  author: {
+    id: number;
+    name: string;
+  };
   message: string;
+  id: number;
 }
 
 interface ChatProps {
-  messages: Message[];
+  channelId: string;
 }
+export function Chat({ channelId }: ChatProps) {
+  const [newMessage, handleNewMessage] = useState<any>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [conversation, setConversation] = useState<Conversation | null>(null);
+  const fetchMessages = async (channelId: string) => {
+    try {
+      let { data: messages }: any = await supabase
+        .from("messages")
+        .select(`*, author:authorId(*)`)
+        .eq("conversationId", channelId)
+        .order("created_at", { ascending: true });
+      setMessages(messages);
+      return messages;
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+  const fetchCoversation = async (channelId: string) => {
+    try {
+      let { data: conversations } = await supabase.from("conversations").select(`*, user1(*), user2(*)`).eq("id", channelId).single();
+      console.log(conversations);
+      setConversation(conversations);
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
 
-export function Chat({ messages }: ChatProps) {
+  useEffect(() => {
+    fetchMessages(channelId);
+    fetchCoversation(channelId);
+    const messageListener = supabase
+      .channel("public:messages")
+      .on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, (payload) => handleNewMessage(payload.new))
+      .subscribe();
+
+    return () => {
+      messageListener.unsubscribe();
+    };
+  }, [channelId]);
+
+  useEffect(() => {
+    console.log("newMessage", newMessage);
+    if (newMessage && newMessage.conversationId === Number(channelId)) {
+      const handleAsync = async () => {
+        setMessages(messages.concat(newMessage));
+      };
+      handleAsync();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newMessage]);
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-5">
       <div className="absolute top-5 left-5">
-        <Back before="leaderboard" />
+        <Back before="../leaderboard" />
       </div>
       <div className="flex w-full max-w-4xl flex-1 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-800">
         <div className="flex flex-1 flex-col">
@@ -28,10 +81,8 @@ export function Chat({ messages }: ChatProps) {
                 <AvatarFallback>CB1</AvatarFallback>
               </Avatar>
               <div>
-                <div className="font-medium">Chatbot 1</div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Online
-                </div>
+                <div className="font-medium">{conversation?.user1.name}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Online</div>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -40,10 +91,8 @@ export function Chat({ messages }: ChatProps) {
                 <AvatarFallback>CB2</AvatarFallback>
               </Avatar>
               <div>
-                <div className="font-medium">Chatbot 2</div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Online
-                </div>
+                <div className="font-medium">{conversation?.user2.name}</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">Online</div>
               </div>
             </div>
           </div>
@@ -51,13 +100,8 @@ export function Chat({ messages }: ChatProps) {
             <div className="grid gap-4">
               {messages.map((message, index) => {
                 return (
-                  <div
-                    key={index}
-                    className={`flex items-start space-x-4 ${
-                      message.author === "bot1" ? "" : "justify-end"
-                    }`}
-                  >
-                    {message.author === "bot1" ? (
+                  <div key={index} className={`flex items-start space-x-4 ${message.author.id === 1 ? "" : "justify-end"}`}>
+                    {message.author.id === 1 ? (
                       <Avatar>
                         <AvatarImage alt="Chatbot 1" src="/chatbot1.png" />
                         <AvatarFallback>CB1</AvatarFallback>
@@ -67,16 +111,12 @@ export function Chat({ messages }: ChatProps) {
                     )}
                     <div
                       className={`flex-1 space-y-2 ${
-                        message.author === "bot1"
-                          ? "bg-gray-100 dark:bg-gray-700"
-                          : "bg-[#FFA7A7]"
-                      } rounded-lg p-4 text-sm ${
-                        message.author === "bot1" ? "" : "text-white"
-                      }`}
+                        message.author.id === 1 ? "bg-gray-100 dark:bg-gray-700" : "bg-[#FFA7A7]"
+                      } rounded-lg p-4 text-sm ${message.author.id === 1 ? "" : "text-white"}`}
                     >
                       <p>{message.message}</p>
                     </div>
-                    {message.author === "bot2" ? (
+                    {message.author.id === 2 ? (
                       <Avatar>
                         <AvatarImage alt="Chatbot 2" src="/chatbot2.png" />
                         <AvatarFallback>CB2</AvatarFallback>
