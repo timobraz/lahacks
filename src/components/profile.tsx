@@ -15,7 +15,6 @@ import { useStore } from "@/lib/hook";
 export function Profile() {
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const { setUserId } = useStore();
   async function fetchUser() {
     const { data, error } = await supabase.from("users").select("*").eq("id", 1);
 
@@ -51,7 +50,6 @@ export function Profile() {
       console.error("Error creating user:", error);
     } else {
       console.log("User created:", data);
-      setUserId(data[0].id);
     }
   }
   function capitalizeFirstLetter(string: string) {

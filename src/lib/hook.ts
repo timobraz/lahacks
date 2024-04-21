@@ -3,18 +3,15 @@ import { useContext, useEffect, useState, useCallback } from "react";
 import { supabase } from "./supabase";
 import UserContext from "./context";
 export const useStore = () => {
-  const [topMatches, setTopMatches] = useState<any>([]);
-  const [userId, setUserId] = useState<number>(1);
-  const [user, setUser] = useState<any>(null);
-
   const queryUser = useCallback(async () => {
     const user = await supabase.from("users").select("*").eq("id", 1).single();
     if (user.error) {
       console.error("Error fetching user", user.error);
     } else {
-      setUser(user.data);
+      console.log("User", user.data);
+      return user.data;
     }
-  }, [setUser]);
+  }, []);
   async function getConversations() {
     const { data, error } = await supabase.from("conversations").select("*").eq("user1", 1).or("user2=1");
     if (error) {
@@ -24,10 +21,10 @@ export const useStore = () => {
     }
   }
 
-  useEffect(() => {
-    getConversations();
-    queryUser();
-  }, [userId, queryUser]);
+  // useEffect(() => {
+  //   getConversations();
+  //   queryUser();
+  // }, []);
 
-  return { userId, setUserId, user };
+  return { queryUser, getConversations };
 };

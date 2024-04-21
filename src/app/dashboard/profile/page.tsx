@@ -1,8 +1,22 @@
+"use client";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
+import { useStore } from "@/lib/hook";
 import Link from "next/link";
-import { JSX, SVGProps } from "react";
+import { JSX, SVGProps, useEffect, useState } from "react";
 
 export const Page = () => {
+  const { queryUser } = useStore();
+  const [user, setUser] = useState<any>(null);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  useEffect(() => {
+    async function fetchUser() {
+      const data = await queryUser();
+      setUser(data);
+    }
+    fetchUser();
+  }, []);
+
+  console.log(user);
   return (
     <div className="w-full h-full bg-gray-50 ">
       <header className="lg:px-7 h-[63px] flex items-center justify-between">
@@ -11,22 +25,13 @@ export const Page = () => {
           <span className="sr-only">Dating Site</span>
         </Link>
         <nav className="ml-auto flex gap-12 text-[#2e2e2e]">
-          <Link
-            className="text-sm font-medium hover:underline underline-offset-4"
-            href="/messages"
-          >
+          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/messages">
             Messages
           </Link>
-          <Link
-            className="text-sm font-medium hover:underline underline-offset-4"
-            href="/dateplanner"
-          >
+          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/dateplanner">
             Date Planner
           </Link>
-          <Link
-            className="text-sm font-medium hover:underline underline-offset-4"
-            href="/dashboard/profile"
-          >
+          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/dashboard/profile">
             Profile
           </Link>
         </nav>
@@ -35,61 +40,30 @@ export const Page = () => {
         <div className="w-full max-w-md space-y-6">
           <div className="flex flex-col items-center space-y-4">
             <Avatar className="h-24 w-24">
-              <AvatarImage
-                alt="Profile Picture"
-                src="/placeholder-avatar.jpg"
-              />
-              <AvatarFallback>JP</AvatarFallback>
+              <AvatarImage alt="Profile Picture" src="/placeholder-avatar.jpg" />
+              <AvatarFallback>{user?.name[0]}</AvatarFallback>
             </Avatar>
             <div className="space-y-1 text-center">
-              <div className="text-2xl font-bold">andy</div>
-              <div className="text-gray-500 dark:text-gray-400">
-                10 years old
-              </div>
-              <div className="text-gray-500 dark:text-gray-400">male</div>
-              <div className="text-gray-500 dark:text-gray-400">
-                Interested in asdf
-              </div>
-              <div className="text-gray-500 dark:text-gray-400">SF</div>
-              <div className="text-gray-500 dark:text-gray-400">shit music</div>
+              <div className="text-2xl font-bold">{user?.name}</div>
+              <div className="text-gray-500 dark:text-gray-400">{user?.age} years old</div>
+              <div className="text-gray-500 dark:text-gray-400">{user?.gender}</div>
+              <div className="text-gray-500 dark:text-gray-400">{user?.genderPreference}</div>
+              <div className="text-gray-500 dark:text-gray-400">{user?.location}</div>
+              <div className="text-gray-500 dark:text-gray-400">{user?.musicGenre}</div>
             </div>
           </div>
           <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
-            <p>hi</p>
+            <p>{user?.bio}</p>
             <div className="space-y-2">
               <div className="font-medium">Interests:</div>
-              <div>basketbas</div>
+              <div>{user?.interests}</div>
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <img
-              alt="Image 1"
-              className="aspect-video rounded-md object-cover"
-              height={200}
-              src="/placeholder.svg"
-              width={300}
-            />
-            <img
-              alt="Image 2"
-              className="aspect-video rounded-md object-cover"
-              height={200}
-              src="/placeholder.svg"
-              width={300}
-            />
-            <img
-              alt="Image 3"
-              className="aspect-video rounded-md object-cover"
-              height={200}
-              src="/placeholder.svg"
-              width={300}
-            />
-            <img
-              alt="Image 4"
-              className="aspect-video rounded-md object-cover"
-              height={200}
-              src="/placeholder.svg"
-              width={300}
-            />
+            <img alt="Image 1" className="aspect-video rounded-md object-cover" height={200} src="/placeholder.svg" width={300} />
+            <img alt="Image 2" className="aspect-video rounded-md object-cover" height={200} src="/placeholder.svg" width={300} />
+            <img alt="Image 3" className="aspect-video rounded-md object-cover" height={200} src="/placeholder.svg" width={300} />
+            <img alt="Image 4" className="aspect-video rounded-md object-cover" height={200} src="/placeholder.svg" width={300} />
           </div>
         </div>
       </div>

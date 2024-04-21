@@ -3,12 +3,11 @@ import { useChat } from "ai/react";
 import Messages from "@/components/messages";
 import InputForm from "@/components/inputForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Message } from "ai/react";
-import { useEffect, useState, useRef } from "react";
+
+import { useEffect } from "react";
 
 export function AIChat() {
-  const formRef = useRef<HTMLElement>(null);
-  const { input, messages, handleInputChange, handleSubmit, isLoading, stop, reload } = useChat({
+  const { input, messages, handleInputChange, handleSubmit, isLoading, stop, reload, setMessages } = useChat({
     api: "/api/genai",
     initialMessages: [
       {
