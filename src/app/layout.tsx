@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import { Cormorant_Garamond } from "next/font/google";
 import { Libre_Franklin } from "next/font/google";
 import "./globals.css";
+import { supabase } from "@/lib/supabase";
+import UserContext from "@/lib/context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +29,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <UserContext.Provider value={null}>
+        <body>{children}</body>
+      </UserContext.Provider>
     </html>
   );
 }
