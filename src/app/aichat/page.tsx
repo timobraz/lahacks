@@ -50,7 +50,7 @@ export const Page = () => {
       </div>
 
       <div className="ml-auto bg-gray-100 dark:bg-gray-900 p-5">
-        <Next after="dashboard" />
+        <Next after="matching" />
       </div>
     </div>
   );
