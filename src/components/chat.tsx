@@ -4,6 +4,9 @@ import { Back } from "@/components/back";
 import { supabase } from "@/lib/supabase";
 import { Dispatch, useEffect, useState } from "react";
 import { Conversation } from "./leaderboard";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { SendIcon } from "@/components/ui/icons";
 
 export interface Message {
   author: {
@@ -128,6 +131,15 @@ export function Chat({ channelId }: ChatProps) {
                 );
               })}
             </div>
+          </div>
+          <div className="border-t border-gray-200 dark:border-gray-800 p-3">
+            <form className="flex items-center gap-2">
+              <Input className="flex-1" placeholder="Type your message..." />
+              <Button size="icon" type="submit">
+                <SendIcon className="h-5 w-5" />
+                <span className="sr-only">Send message</span>
+              </Button>
+            </form>
           </div>
         </div>
       </div>
