@@ -41,7 +41,7 @@ export function Profile() {
 
   const showNextQuestion = () => {
     setCurrentQuestion((prevQuestion) => {
-      if (prevQuestion < questions.length - 1) {
+      if (prevQuestion < questions.length) {
         return prevQuestion + 1;
       }
       return prevQuestion;
@@ -112,7 +112,7 @@ export function Profile() {
                   index !== currentQuestion ? "hidden" : ""
                 }`}
               >
-                <div className="space-y-2 w-full ">
+                <div className={`space-y-2 w-full `}>
                   <Label htmlFor="name">{questions[index].question}</Label>
                   <Textarea
                     className=""
@@ -132,6 +132,7 @@ export function Profile() {
                       variant="outline"
                       onClick={showPreviousQuestion}
                       disabled={currentQuestion === 0}
+                      className="visible"
                     >
                       <ArrowRightIcon className="h-4 w-4 rotate-180" />
                       <span className="sr-only">Previous</span>
@@ -149,7 +150,7 @@ export function Profile() {
                         size="icon"
                         variant="outline"
                         onClick={showNextQuestion}
-                        disabled={currentQuestion === questions.length - 1}
+                        disabled={currentQuestion === questions.length}
                       >
                         <ArrowRightIcon className="h-4 w-4 " />
                         <span className="sr-only">Next</span>
