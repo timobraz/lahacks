@@ -44,8 +44,8 @@ export function Dashboard() {
           <span className="sr-only">Dating Site</span>
         </Link>
         <nav className="ml-auto flex gap-12 text-[#2e2e2e]">
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/messages">
-            Messages
+          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/dashboard">
+            Dashboard
           </Link>
           <Link className="text-sm font-medium hover:underline underline-offset-4" href="/dateplanner">
             Date Planner

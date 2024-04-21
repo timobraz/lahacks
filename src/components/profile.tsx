@@ -16,10 +16,7 @@ export function Profile() {
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   async function fetchUser() {
-    const { data, error } = await supabase
-      .from("users")
-      .select("*")
-      .eq("id", 1);
+    const { data, error } = await supabase.from("users").select("*").eq("id", 1);
 
     if (error) {
       console.error("Error fetching user:", error);
@@ -43,6 +40,7 @@ export function Profile() {
           location: location,
           interests: interests,
           bio: bio,
+          pfp: null,
           images: uploadedImages,
         },
       ])
@@ -64,9 +62,7 @@ export function Profile() {
   const [musicTaste, setMusicTaste] = useState("Rock");
   const [location, setLocation] = useState("San Fransisco, CA");
   const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [interests, setInterests] = useState(
-    "Hiking, Camping, Reading, Cooking"
-  );
+  const [interests, setInterests] = useState("Hiking, Camping, Reading, Cooking");
   const [bio, setBio] = useState(
     "Hi, I'm John! I'm a passionate outdoorsman who loves hiking, camping, and exploring new places. In my free time, you can find me reading, listening to music, or trying out new recipes in the kitchen. I'm looking to connect with like-minded individuals who share my love for adventure and personal growth. If you're interested in getting to know me better, feel free to reach out!"
   );
@@ -95,9 +91,7 @@ export function Profile() {
     const fetchImages = async () => {
       const urls = await Promise.all(
         uploadedImages.map(async (imageName) => {
-          const { data, error } = await supabase.storage
-            .from("images")
-            .download(imageName);
+          const { data, error } = await supabase.storage.from("images").download(imageName);
           if (error) {
             console.error("Error fetching image:", error);
           } else if (data) {
@@ -154,33 +148,21 @@ export function Profile() {
         <Back before="/" />
       </div>
       <div className="flex items-center justify-center gap-[100px] bg-gray-100 p-6 dark:bg-gray-800 lg:p-12 w-full flex-col">
-        <div className="text-5xl text-center font-corm">
-          Fill out basic information first...
-        </div>
+        <div className="text-5xl text-center font-corm">Fill out basic information first...</div>
         <div className="flex flex-col items-center justify-center w-full -mt-5 mb-[200px]">
-          {questions.map(
-            (
-              eachQuestion: { question: string; placeholder: string },
-              index: number
-            ) => (
-              <div
-                key={index}
-                className={`question w-2/3 ${
-                  index !== currentQuestion ? "hidden" : ""
-                }`}
-              >
-                <div className="space-y-2 w-full ">
-                  <Label htmlFor="name">{questions[index].question}</Label>
-                  <Textarea
-                    className=""
-                    id="name"
-                    placeholder={questions[index].placeholder}
-                    onChange={(e) => questions[index].function(e.target.value)}
-                  />
-                </div>
+          {questions.map((eachQuestion: { question: string; placeholder: string }, index: number) => (
+            <div key={index} className={`question w-2/3 ${index !== currentQuestion ? "hidden" : ""}`}>
+              <div className="space-y-2 w-full ">
+                <Label htmlFor="name">{questions[index].question}</Label>
+                <Textarea
+                  className=""
+                  id="name"
+                  placeholder={questions[index].placeholder}
+                  onChange={(e) => questions[index].function(e.target.value)}
+                />
               </div>
-            )
-          )}
+            </div>
+          ))}
           <div className={`w-2/3  ${currentQuestion === 8 ? "" : "hidden"}`}>
             <ImageInput
               onUpload={(images) => {
@@ -191,37 +173,18 @@ export function Profile() {
           </div>
 
           <div className="flex justify-between w-2/3">
-            <div
-              className={`flex items-center gap-2 mt-5 ${
-                currentQuestion === 0 ? "invisible" : ""
-              }`}
-            >
-              <Button
-                size="icon"
-                variant="outline"
-                onClick={showPreviousQuestion}
-                disabled={currentQuestion === 0}
-              >
+            <div className={`flex items-center gap-2 mt-5 ${currentQuestion === 0 ? "invisible" : ""}`}>
+              <Button size="icon" variant="outline" onClick={showPreviousQuestion} disabled={currentQuestion === 0}>
                 <ArrowRightIcon className="h-4 w-4 rotate-180" />
                 <span className="sr-only">Previous</span>
               </Button>
               <span className="text-sm font-medium">Next</span>
             </div>
-            <div
-              onClick={currentQuestion === 8 ? createUser : () => {}}
-              className="flex items-center gap-2 mt-5"
-            >
+            <div onClick={currentQuestion === 8 ? createUser : () => {}} className="flex items-center gap-2 mt-5">
               {" "}
-              <span className="text-sm font-medium">
-                {currentQuestion === 8 ? "Submit" : "Next"}
-              </span>
+              <span className="text-sm font-medium">{currentQuestion === 8 ? "Submit" : "Next"}</span>
               <Link href={`/${currentQuestion === 8 ? "aichat" : "profile"}`}>
-                <Button
-                  size="icon"
-                  variant="outline"
-                  onClick={showNextQuestion}
-                  disabled={currentQuestion === questions.length + 1}
-                >
+                <Button size="icon" variant="outline" onClick={showNextQuestion} disabled={currentQuestion === questions.length + 1}>
                   <ArrowRightIcon className="h-4 w-4 " />
                   <span className="sr-only">Next</span>
                 </Button>
@@ -234,30 +197,16 @@ export function Profile() {
         <div className="w-full max-w-md space-y-6">
           <div className="flex flex-col items-center space-y-4">
             <Avatar className="h-24 w-24">
-              <AvatarImage
-                alt="Profile Picture"
-                src="/placeholder-avatar.jpg"
-              />
-              <Image
-                alt="asdf"
-                height={200}
-                src={imageUrls[0] ? imageUrls[0] : "/placeholder.svg"}
-                width={300}
-              />
+              <AvatarImage alt="Profile Picture" src="/placeholder-avatar.jpg" />
+              <Image alt="asdf" height={200} src={imageUrls[0] ? imageUrls[0] : "/placeholder.svg"} width={300} />
             </Avatar>
             <div className="space-y-1 text-center">
               <div className="text-2xl font-bold">{name}</div>
-              <div className="text-gray-500 dark:text-gray-400">
-                {age} years old
-              </div>
+              <div className="text-gray-500 dark:text-gray-400">{age} years old</div>
               <div className="text-gray-500 dark:text-gray-400">{gender}</div>
-              <div className="text-gray-500 dark:text-gray-400">
-                Interested in {genderPreference}
-              </div>
+              <div className="text-gray-500 dark:text-gray-400">Interested in {genderPreference}</div>
               <div className="text-gray-500 dark:text-gray-400">{location}</div>
-              <div className="text-gray-500 dark:text-gray-400">
-                {musicTaste} music
-              </div>
+              <div className="text-gray-500 dark:text-gray-400">{musicTaste} music</div>
             </div>
           </div>
           <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400">
@@ -303,9 +252,7 @@ export function Profile() {
   );
 }
 
-function ArrowRightIcon(
-  props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>
-) {
+function ArrowRightIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

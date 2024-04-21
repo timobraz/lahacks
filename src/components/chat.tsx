@@ -45,7 +45,6 @@ export function Chat({ channelId, interactable }: ChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [inputValue, setInputValue] = useState("");
-  const [inputValue, setInputValue] = useState("");
   const fetchMessages = async (channelId: string) => {
     try {
       let { data: messages }: any = await supabase
