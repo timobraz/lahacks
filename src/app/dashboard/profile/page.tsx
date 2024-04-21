@@ -1,6 +1,7 @@
 "use client";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { useStore } from "@/lib/hook";
+import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { JSX, SVGProps, useEffect, useState } from "react";
 
@@ -12,7 +13,16 @@ export const Page = () => {
     async function fetchUser() {
       const data = await queryUser();
       setUser(data);
+      data.images.forEach(async (image: any) => {
+        const { data, error } = await supabase.storage.from("images").download(image);
+        if (error) {
+          console.error("Error fetching image", error);
+        } else if (data) {
+          setImageUrls((prev) => [...prev, URL.createObjectURL(data)]);
+        }
+      });
     }
+
     fetchUser();
   }, []);
 
@@ -60,10 +70,9 @@ export const Page = () => {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <img alt="Image 1" className="aspect-video rounded-md object-cover" height={200} src="/placeholder.svg" width={300} />
-            <img alt="Image 2" className="aspect-video rounded-md object-cover" height={200} src="/placeholder.svg" width={300} />
-            <img alt="Image 3" className="aspect-video rounded-md object-cover" height={200} src="/placeholder.svg" width={300} />
-            <img alt="Image 4" className="aspect-video rounded-md object-cover" height={200} src="/placeholder.svg" width={300} />
+            {imageUrls.map((url, index) => (
+              <img alt={`Image ${index + 1}`} className="aspect-video rounded-md object-cover" height={200} key={index} src={url} width={300} />
+            ))}
           </div>
         </div>
       </div>

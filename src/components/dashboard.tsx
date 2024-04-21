@@ -14,6 +14,7 @@ export function Dashboard() {
       age: string;
       name: string;
       interest: string;
+      images: string[];
     };
     // Add other user fields here
   };
@@ -21,11 +22,7 @@ export function Dashboard() {
   const [data, setData] = useState<DataType[]>([]);
   useEffect(() => {
     async function fetchCompatabilityData() {
-      const { data, error } = await supabase
-        .from("compatability")
-        .select("*, matchId(*)")
-        .order("compatability", { ascending: false })
-        .limit(4);
+      const { data, error } = await supabase.from("compatability").select("*, matchId(*)").order("compatability", { ascending: false }).limit(4);
 
       if (error) {
         console.error("Error fetching data:", error);
@@ -48,33 +45,20 @@ export function Dashboard() {
           <span className="sr-only">Dating Site</span>
         </Link>
         <nav className="ml-auto flex gap-12 text-[#2e2e2e]">
-          <Link
-            className="text-sm font-medium hover:underline underline-offset-4"
-            href="/messages"
-          >
+          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/messages">
             Messages
           </Link>
-          <Link
-            className="text-sm font-medium hover:underline underline-offset-4"
-            href="/dateplanner"
-          >
+          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/dateplanner">
             Date Planner
           </Link>
-          <Link
-            className="text-sm font-medium hover:underline underline-offset-4"
-            href="/dashboard/profile"
-          >
+          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/dashboard/profile">
             Profile
           </Link>
         </nav>
       </header>
       <main className="flex-1 p-8 w-full">
-        <h2 className="text-6xl font-corm mb-6 w-full items-center flex justify-center">
-          Dashboard
-        </h2>
-        <h2 className="text-4xl font-corm mb-6 w-full">
-          Top Matches of the Week
-        </h2>
+        <h2 className="text-6xl font-corm mb-6 w-full items-center flex justify-center">Dashboard</h2>
+        <h2 className="text-4xl font-corm mb-6 w-full">Top Matches of the Week</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {data.map((user) => (
             <UserCard
@@ -83,6 +67,8 @@ export function Dashboard() {
               name={user.matchId.name}
               interests={user.matchId.interest}
               key={user.id}
+              id={user.id}
+              pfp={user.matchId.images && user.matchId.images[0]}
             />
           ))}
         </div>
@@ -114,16 +100,13 @@ type UserCardProps = {
   age: string;
   interests: string;
   compatability: number;
+  pfp: string;
+  id: number;
 };
 
-const UserCard: React.FC<UserCardProps> = ({
-  name,
-  age,
-  interests,
-  compatability,
-}) => {
+const UserCard: React.FC<UserCardProps> = ({ name, age, interests, compatability, pfp, id }) => {
   return (
-    <Link href="/chat/1">
+    <Link href={"/chat/" + id}>
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div
           className="h-[400px] bg-cover bg-center"
@@ -141,10 +124,7 @@ const UserCard: React.FC<UserCardProps> = ({
             </p>
           </div>
           <div className="flex flex-col items-center mt-2">
-            <Progress
-              className="mt-1 h-2 color-[#2e2e2e]"
-              value={compatability}
-            />
+            <Progress className="mt-1 h-2 color-[#2e2e2e]" value={compatability} />
             <span className="ml-2">{compatability}% Compatible</span>
           </div>
         </div>
