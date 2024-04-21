@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { RadioGroupItem, RadioGroup } from "@/components/ui/radio-group";
 import { JSX, SVGProps } from "react";
+import { ImageInput } from "./image-input";
 
 import {
   SelectValue,
@@ -112,7 +113,7 @@ export function Profile() {
                   index !== currentQuestion ? "hidden" : ""
                 }`}
               >
-                <div className={`space-y-2 w-full `}>
+                <div className="space-y-2 w-full ">
                   <Label htmlFor="name">{questions[index].question}</Label>
                   <Textarea
                     className=""
@@ -121,46 +122,47 @@ export function Profile() {
                     onChange={(e) => questions[index].function(e.target.value)}
                   />
                 </div>
-                <div className="flex justify-between w-full">
-                  <div
-                    className={`flex items-center gap-2 mt-5 ${
-                      currentQuestion === 0 ? "invisible" : ""
-                    }`}
-                  >
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      onClick={showPreviousQuestion}
-                      disabled={currentQuestion === 0}
-                      className="visible"
-                    >
-                      <ArrowRightIcon className="h-4 w-4 rotate-180" />
-                      <span className="sr-only">Previous</span>
-                    </Button>
-                    <span className="text-sm font-medium">Next</span>
-                  </div>
-                  <div className="flex items-center gap-2 mt-5">
-                    <span className="text-sm font-medium">
-                      {currentQuestion === 8 ? "Submit" : "Next"}
-                    </span>
-                    <Link
-                      href={`/${currentQuestion === 8 ? "aichat" : "profile"}`}
-                    >
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        onClick={showNextQuestion}
-                        disabled={currentQuestion === questions.length}
-                      >
-                        <ArrowRightIcon className="h-4 w-4 " />
-                        <span className="sr-only">Next</span>
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
               </div>
             )
           )}
+          <div className={`w-2/3  ${currentQuestion === 8 ? "" : "hidden"}`}>
+            <ImageInput></ImageInput>
+          </div>
+
+          <div className="flex justify-between w-2/3">
+            <div
+              className={`flex items-center gap-2 mt-5 ${
+                currentQuestion === 0 ? "invisible" : ""
+              }`}
+            >
+              <Button
+                size="icon"
+                variant="outline"
+                onClick={showPreviousQuestion}
+                disabled={currentQuestion === 0}
+              >
+                <ArrowRightIcon className="h-4 w-4 rotate-180" />
+                <span className="sr-only">Previous</span>
+              </Button>
+              <span className="text-sm font-medium">Next</span>
+            </div>
+            <div className="flex items-center gap-2 mt-5">
+              <span className="text-sm font-medium">
+                {currentQuestion === 8 ? "Submit" : "Next"}
+              </span>
+              <Link href={`/${currentQuestion === 8 ? "aichat" : "profile"}`}>
+                <Button
+                  size="icon"
+                  variant="outline"
+                  onClick={showNextQuestion}
+                  disabled={currentQuestion === questions.length + 1}
+                >
+                  <ArrowRightIcon className="h-4 w-4 " />
+                  <span className="sr-only">Next</span>
+                </Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
       <div className="flex justify-center bg-gray-50 p-6 dark:bg-gray-900 pt-16">
