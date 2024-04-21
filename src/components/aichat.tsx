@@ -7,7 +7,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useEffect } from "react";
 
 export function AIChat() {
-  const { input, messages, handleInputChange, handleSubmit, isLoading, stop, reload, setMessages } = useChat({
+  const formRef = useRef<HTMLElement>(null);
+  const { input, messages, handleInputChange, handleSubmit, isLoading, stop, reload } = useChat({
     api: "/api/genai",
     initialMessages: [
       {

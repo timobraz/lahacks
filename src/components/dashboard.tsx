@@ -1,15 +1,44 @@
+"use client";
 import Link from "next/link";
 import { JSX, SVGProps } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Leaderboard } from "./leaderboard";
+import { supabase } from "@/lib/supabase";
+import { useState, useEffect } from "react";
 
 export function Dashboard() {
-  const users = [
-    { name: "Jane Doe", age: 25, location: "New York", compatibility: 80 },
-    { name: "John Smith", age: 30, location: "Los Angeles", compatibility: 75 },
-    { name: "Sarah Johnson", age: 28, location: "Chicago", compatibility: 65 },
-    { name: "Michael Brown", age: 32, location: "Miami", compatibility: 55 },
-  ];
+  type DataType = {
+    compatability: number;
+    id: number;
+    matchId: {
+      age: string;
+      name: string;
+      interest: string;
+    };
+    // Add other user fields here
+  };
+
+  const [data, setData] = useState<DataType[]>([]);
+  useEffect(() => {
+    async function fetchCompatabilityData() {
+      const { data, error } = await supabase
+        .from("compatability")
+        .select("*, matchId(*)")
+        .order("compatability", { ascending: false })
+        .limit(4);
+
+      if (error) {
+        console.error("Error fetching data:", error);
+        return;
+      }
+      console.log("Compatability data:", data);
+      // Sort the data by the compatability field in descending order
+
+      setData(data);
+    }
+
+    fetchCompatabilityData();
+  }, []); // Empty array means this effect will run once on mount
 
   return (
     <div className="flex flex-col h-screen w-full">
@@ -47,11 +76,15 @@ export function Dashboard() {
           Top Matches of the Week
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {users
-            .sort((a, b) => b.compatibility - a.compatibility)
-            .map((user) => (
-              <UserCard key={user.name} {...user} />
-            ))}
+          {data.map((user) => (
+            <UserCard
+              compatability={user.compatability}
+              age={user.matchId.age}
+              name={user.matchId.name}
+              interests={user.matchId.interest}
+              key={user.id}
+            />
+          ))}
         </div>
       </main>
     </div>
@@ -78,16 +111,16 @@ function HeartIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
 }
 type UserCardProps = {
   name: string;
-  age: number;
-  location: string;
-  compatibility: number;
+  age: string;
+  interests: string;
+  compatability: number;
 };
 
 const UserCard: React.FC<UserCardProps> = ({
   name,
   age,
-  location,
-  compatibility,
+  interests,
+  compatability,
 }) => {
   return (
     <Link href="/chat/1">
@@ -100,21 +133,19 @@ const UserCard: React.FC<UserCardProps> = ({
         />
         <div className="p-8">
           <h3 className="text-2xl ">{name}</h3>
-          <p className="text-gray-400 mb-5 text-md">
-            {age}, {location}
-          </p>
+          <p className="text-gray-400 mb-5 text-md">{age},</p>
           <div className="flex flex-col gap-3 mb-5">
             <p className="text-gray-500">
               <span className="text-gray-700">Interests: </span>
-              Soccer, Football, Rowing
+              {interests}
             </p>
           </div>
           <div className="flex flex-col items-center mt-2">
             <Progress
               className="mt-1 h-2 color-[#2e2e2e]"
-              value={compatibility}
+              value={compatability}
             />
-            <span className="ml-2">{compatibility}% Compatible</span>
+            <span className="ml-2">{compatability}% Compatible</span>
           </div>
         </div>
       </div>
