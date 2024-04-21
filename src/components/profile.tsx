@@ -94,7 +94,7 @@ export function Profile() {
   return (
     <div className="grid min-h-screen w-full grid-cols-1 lg:grid-cols-2">
       <div className="absolute top-5 left-5">
-        <Back before="/" />
+        <Back before="/dashboard" />
       </div>
       <div className="flex items-center justify-center gap-[100px] bg-gray-100 p-6 dark:bg-gray-800 lg:p-12 w-full flex-col">
         <div className="text-5xl text-center font-corm">

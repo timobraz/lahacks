@@ -13,19 +13,19 @@ export const Page = () => {
         <nav className="ml-auto flex gap-12 text-[#2e2e2e]">
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
-            href="#"
+            href="/messages"
           >
             Messages
           </Link>
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
-            href="#"
+            href="/dateplanner"
           >
             Date Planner
           </Link>
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
-            href="#"
+            href="/dashboard/profile"
           >
             Profile
           </Link>
