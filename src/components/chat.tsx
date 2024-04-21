@@ -85,6 +85,7 @@ export function Chat({ channelId }: ChatProps) {
       if (error) {
         console.error('Error sending message:', error);
       } else {
+        console.log("data", data);
         setMessages([...messages, { ...newMessage, id: data.id }]);
         setInputValue('');
       }
@@ -149,6 +150,7 @@ export function Chat({ channelId }: ChatProps) {
               <div className="text-center text-gray-500 dark:text-gray-400">No messages yet. Start a new conversation!</div>
             ) : (
               <div className="grid gap-4">
+                console.log(messages);
                 {messages.map((message, index) => {
                   return (
                     <div key={index} className={`flex items-start space-x-4 ${message.author.id === 1 ? "" : "justify-end"}`}>
