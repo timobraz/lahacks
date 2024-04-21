@@ -7,7 +7,7 @@ from typing import Optional, List
 gemini = Agent(
     name="gemini",
     port=8800,
-    seed="secret",
+    seed="google gemini secret QtAB24dYye",
     endpoint=["http://localhost:8800/submit"]
 )
 
@@ -21,14 +21,14 @@ class Image(Model):
     format: str
     base64: str
 
-class Request(Model):
+class GeminiRequest(Model):
     api_key: str
     prompt: Optional[str]
     image: Optional[Image]
     chat_history: Optional[List[Chat]]
 
-@gemini_protocol.on_message(model=Request, replies=UAgentResponse)
-async def on_message(ctx: Context, sender: str, msg: Request):
+@gemini_protocol.on_message(model=GeminiRequest, replies=UAgentResponse)
+async def on_message(ctx: Context, sender: str, msg: GeminiRequest):
     ctx.logger.info(f"Recieved message from {sender}")
     try:
         request_id = str(uuid.uuid4())
@@ -108,7 +108,6 @@ async def on_message(ctx: Context, sender: str, msg: Request):
             return
         
         message = response.json()["candidates"][0]["content"]["parts"][0]["text"]
-        print('sender: ', sender)
         await ctx.send(sender, UAgentResponse(message=message, type=UAgentResponseType.FINAL, request_id=request_id))
     except Exception as e:
         ctx.logger.error(e)
@@ -118,5 +117,4 @@ gemini.include(gemini_protocol, publish_manifest=True)
 
 if __name__ == "__main__":
     fund_agent_if_low(gemini.wallet.address())
-    print(gemini.address)
     gemini.run()
