@@ -45,6 +45,7 @@ export function Chat({ channelId }: ChatProps) {
   const [newMessage, handleNewMessage] = useState<any>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [conversation, setConversation] = useState<Conversation | null>(null);
+  const [inputValue, setInputValue] = useState('');
   const fetchMessages = async (channelId: string) => {
     try {
       let { data: messages }: any = await supabase
@@ -69,6 +70,32 @@ export function Chat({ channelId }: ChatProps) {
       setConversation(conversations);
     } catch (error) {
       console.log("error", error);
+    }
+  };
+  const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (inputValue.trim() === '') return; // Don't send empty messages
+
+    const newMessage = {
+      author: { id: 2, name: conversation?.user2.name }, // Assuming the current user is user2
+      message: inputValue.trim(),
+    };
+
+    try {
+      const { data, error } = await supabase
+        .from('messages')
+        .insert([{ conversationId: Number(channelId), authorId: 2, message: inputValue.trim() }])
+        .single();
+
+      if (error) {
+        console.error('Error sending message:', error);
+      } else {
+        setMessages([...messages, { ...newMessage, id: data.id }]);
+        setInputValue('');
+      }
+    } catch (err) {
+      console.error('Error sending message:', err);
     }
   };
 
@@ -178,8 +205,13 @@ export function Chat({ channelId }: ChatProps) {
             )}
           </div>
           <div className="border-t border-gray-200 dark:border-gray-800 p-3">
-            <form className="flex items-center gap-2">
-              <Input className="flex-1" placeholder="Type your message..." />
+            <form onSubmit={handleSendMessage} className="flex items-center gap-2">
+              <Input
+                className="flex-1"
+                placeholder="Type your message..."
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+              />
               <Button size="icon" type="submit">
                 <SendIcon className="h-5 w-5" />
                 <span className="sr-only">Send message</span>
