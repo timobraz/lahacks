@@ -30,19 +30,22 @@ export function Profile() {
       console.error("Name and age are required");
       return;
     }
-    const { data, error } = await supabase.from("users").insert([
-      {
-        name: name,
-        age: age,
-        gender: gender,
-        genderPreference: genderPreference,
-        location: location,
-        interests: interests,
-        bio: bio,
-        pfp: null,
-        images: uploadedImages,
-      },
-    ]);
+    const { data, error } = await supabase
+      .from("users")
+      .update([
+        {
+          name: name,
+          age: age,
+          gender: gender,
+          genderPreference: genderPreference,
+          location: location,
+          interests: interests,
+          bio: bio,
+          pfp: null,
+          images: uploadedImages,
+        },
+      ])
+      .eq("id", 1);
 
     if (error) {
       console.error("Error creating user:", error);

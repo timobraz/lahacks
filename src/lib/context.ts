@@ -1,4 +1,5 @@
-import { createContext, useContext } from "react";
+"use client";
+import { createContext } from "react";
 
 const UserContext = createContext<any | null>(null);
 

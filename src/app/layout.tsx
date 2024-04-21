@@ -29,9 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <UserContext.Provider value={null}>
-        <body>{children}</body>
-      </UserContext.Provider>
+      <body>{children}</body>
     </html>
   );
 }
