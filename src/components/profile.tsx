@@ -121,35 +121,45 @@ export function Profile() {
                     onChange={(e) => questions[index].function(e.target.value)}
                   />
                 </div>
+                <div className="flex justify-between w-full">
+                  <div
+                    className={`flex items-center gap-2 mt-5 ${
+                      currentQuestion === 0 ? "invisible" : ""
+                    }`}
+                  >
+                    <Button
+                      size="icon"
+                      variant="outline"
+                      onClick={showPreviousQuestion}
+                      disabled={currentQuestion === 0}
+                    >
+                      <ArrowRightIcon className="h-4 w-4 rotate-180" />
+                      <span className="sr-only">Previous</span>
+                    </Button>
+                    <span className="text-sm font-medium">Next</span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-5">
+                    <span className="text-sm font-medium">
+                      {currentQuestion === 7 ? "Submit" : "Next"}
+                    </span>
+                    <Link
+                      href={`/${currentQuestion === 7 ? "aichat" : "profile"}`}
+                    >
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        onClick={showNextQuestion}
+                        disabled={currentQuestion === questions.length - 1}
+                      >
+                        <ArrowRightIcon className="h-4 w-4 " />
+                        <span className="sr-only">Next</span>
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
               </div>
             )
           )}
-          <div className="flex justify-between w-2/3">
-            <div className="flex items-center gap-2 mt-5">
-              <Button
-                size="icon"
-                variant="outline"
-                onClick={showPreviousQuestion}
-                disabled={currentQuestion === 0}
-              >
-                <ArrowRightIcon className="h-4 w-4 rotate-180" />
-                <span className="sr-only">Previous</span>
-              </Button>
-              <span className="text-sm font-medium">Previous</span>
-            </div>
-            <div className="flex items-center gap-2 mt-5">
-              <span className="text-sm font-medium">Next</span>
-              <Button
-                size="icon"
-                variant="outline"
-                onClick={showNextQuestion}
-                disabled={currentQuestion === questions.length - 1}
-              >
-                <ArrowRightIcon className="h-4 w-4 " />
-                <span className="sr-only">Next</span>
-              </Button>
-            </div>
-          </div>
         </div>
       </div>
       <div className="flex justify-center bg-gray-50 p-6 dark:bg-gray-900 pt-16">
