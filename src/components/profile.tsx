@@ -74,6 +74,21 @@ export function Profile() {
       placeholder: "Enter your location",
       function: setLocation,
     },
+    {
+      question: "Music Taste",
+      placeholder: "What kind of music do you like?",
+      function: setMusicTaste,
+    },
+    {
+      question: "Interests",
+      placeholder: "Hobbies? Interests?, etc",
+      function: setInterests,
+    },
+    {
+      question: "Bio",
+      placeholder: "Tell the world a bit about yourself",
+      function: setBio,
+    },
   ];
 
   return (
