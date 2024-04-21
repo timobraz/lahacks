@@ -11,9 +11,6 @@ export default function Home() {
   const { messages, input, handleInputChange, handleSubmit, isLoading, stop } = useChat({
     api: "/api/genai",
   });
-  const { messages, input, handleInputChange, handleSubmit, isLoading, stop } = useChat({
-    api: "/api/genai",
-  });
 
   return (
     <main className="flex min-h-screen flex-col items-center p-12 text-lg">
