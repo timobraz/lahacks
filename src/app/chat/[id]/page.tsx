@@ -1,6 +1,7 @@
 import React from "react";
 import { Chat } from "@/components/chat";
 import { Back } from "@/components/back";
+import { Next } from "@/components/next";
 
 export const Page = ({ params }: any) => {
   return (
@@ -8,9 +9,9 @@ export const Page = ({ params }: any) => {
       <div className=" bg-gray-100 dark:bg-gray-900 p-5">
         <Back before="../dashboard" />
       </div>
-      <Chat channelId={params.id} />
-      <div className=" bg-gray-100 dark:bg-gray-900 p-5 invisible">
-        <Back before="profile" />
+      <Chat channelId={params.id} interactable={true} />
+      <div className=" bg-gray-100 dark:bg-gray-900 p-5">
+        <Next after="/start" />
       </div>
     </div>
   );

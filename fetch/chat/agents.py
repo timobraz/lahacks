@@ -251,6 +251,19 @@ async def on_message(ctx: Context, _sender: str, msg: Kickoff):
     ctx.storage.set("chat_history", chat_history)
     await ctx.send(john.address, Complete(user=msg.user_name, chat_history=chat_history))
 
+def create_system_prompt(user_name: str, match_name: str, user_bio: str, match_bio: str):
+    return f"""
+        You will be taking on the persona of {user_name} for this conversation.
+        This person has the following bio: {user_bio}
+        You will be conversing with {match_name}.
+        The person you are speaking to has the following bio: {match_bio}
+        You are to be conversational, engaging, and interesting.
+        You are to be respectful, attentive, and responsive.
+        You are to speak in short, clear, and concise sentences.
+        Do not include any identifyers such as names in your response.
+        Write as if you are texting someone you'd like to get to know better, or even someone you'd like to date.
+    """
+
 @wingman.on_query(model=Orchestrate)
 async def on_query(ctx: Context, sender: str, msg: Orchestrate):
     print(f"called from: {sender}")
@@ -267,24 +280,12 @@ async def on_query(ctx: Context, sender: str, msg: Orchestrate):
             match_id=match["id"],
             user_name=user["name"], 
             match_name=match["name"], 
-            user_prompt=user["bio"], 
-            match_prompt=match["bio"]
+            user_prompt=create_system_prompt(user["name"], match["name"], user["bio"], match["bio"]), 
+            match_prompt=create_system_prompt(match["name"], user["name"], match["bio"], user["bio"])
         ))
         ctx.logger.info(f"Sent kickoff to {MED_IDS[index]}")
 
     await ctx.send(sender, UAgentResponse(message="Orchestration complete", type=UAgentResponseType.FINAL))
-
-# @wingman.on_interval(1000)
-# async def on_interval(ctx: Context):
-#     await ctx.send(club._agents[2].address, Kickoff(
-#         conversation_id=1,
-#         user_id=1,
-#         match_id=2,
-#         user_name="Andrew", 
-#         match_name="John", 
-#         user_prompt="For the duration of this chat, you will take on the persona of Andrew Jackson.", 
-#         match_prompt="For the duration of this chat, you will take on the persona of John Adams."
-#     ))
 
 if i == 0:
     club.add(wingman)

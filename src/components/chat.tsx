@@ -37,12 +37,14 @@ function SendIcon(props: React.JSX.IntrinsicAttributes & React.SVGProps<SVGSVGEl
 }
 
 interface ChatProps {
-  channelId: string;
+  channelId: number;
+  interactable: boolean;
 }
-export function Chat({ channelId }: ChatProps) {
+export function Chat({ channelId, interactable }: ChatProps) {
   const [newMessage, handleNewMessage] = useState<any>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [conversation, setConversation] = useState<Conversation | null>(null);
+  const [inputValue, setInputValue] = useState("");
   const [inputValue, setInputValue] = useState("");
   const fetchMessages = async (channelId: string) => {
     try {
@@ -80,17 +82,37 @@ export function Chat({ channelId }: ChatProps) {
 
       if (error) {
         console.error("Error sending message:", error);
+        console.error("Error sending message:", error);
       } else {
         setMessages([...messages, { ...data[0] }]);
         setInputValue("");
         console.log("data", data);
         setMessages([...messages, { ...newMessage, id: data?.id }]);
         setInputValue("");
+        setInputValue("");
       }
     } catch (err) {
       console.error("Error sending message:", err);
+      console.error("Error sending message:", err);
     }
   };
+
+  const recieveMessage = (update: any) => {
+    if (update.new.conversationId === channelId) {
+      const newMessage = {
+        author: {
+          id: update.new.authorId,
+          name: "",
+        },
+        message: update.new.message,
+        id: update.new.id,
+      };
+      console.log;
+      setMessages([...messages, newMessage]);
+    }
+  };
+
+  supabase.channel("messages").on("postgres_changes", { event: "INSERT", schema: "public", table: "messages" }, recieveMessage).subscribe();
 
   useEffect(() => {
     if (channelId) {
@@ -107,20 +129,10 @@ export function Chat({ channelId }: ChatProps) {
     }
   }, [channelId]);
 
-  useEffect(() => {
-    console.log("newMessage", newMessage);
-    if (newMessage && newMessage.conversationId === Number(channelId)) {
-      const handleAsync = async () => {
-        setMessages(messages.concat(newMessage));
-      };
-      handleAsync();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newMessage]);
   return (
     <div className="flex h-full w-full flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 p-5">
       <div className="flex w-full max-w-4xl flex-1 overflow-hidden rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-800 dark:bg-gray-800">
-        <div className="flex flex-1 flex-col">
+        <div className="max-h-96 flex flex-1 flex-col">
           <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4 dark:border-gray-700">
             <div className="flex items-center space-x-4">
               <Avatar>

@@ -8,6 +8,15 @@ import { useEffect } from "react";
 
 export function AIChat() {
   const { input, messages, handleInputChange, handleSubmit, isLoading, stop, reload } = useChat({
+  const {
+    input,
+    messages,
+    handleInputChange,
+    handleSubmit,
+    isLoading,
+    stop,
+    reload,
+  } = useChat({
     api: "/api/genai",
     initialMessages: [
       {
@@ -31,7 +40,9 @@ export function AIChat() {
               </Avatar>
               <div>
                 <div className="font-medium">Chatbot 1</div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">Online</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Online
+                </div>
               </div>
             </div>
             <div className="flex items-center space-x-4">
@@ -41,7 +52,9 @@ export function AIChat() {
               </Avatar>
               <div>
                 <div className="font-medium">Chatbot 2</div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">Online</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Online
+                </div>
               </div>
             </div>
           </div>
@@ -49,7 +62,13 @@ export function AIChat() {
             <Messages messages={messages} isLoading={isLoading} />
           </div>
           <div className="border-t border-gray-200 dark:border-gray-800 p-3">
-            <InputForm handleInputChange={handleInputChange} handleSubmit={handleSubmit} input={input} isLoading={isLoading} stop={stop} />
+            <InputForm
+              handleInputChange={handleInputChange}
+              handleSubmit={handleSubmit}
+              input={input}
+              isLoading={isLoading}
+              stop={stop}
+            />
           </div>
         </div>
       </div>

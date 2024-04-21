@@ -1,10 +1,9 @@
 "use client";
 import Link from "next/link";
-import { JSX, SVGProps } from "react";
+import { JSX, SVGProps, useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Leaderboard } from "./leaderboard";
 import { supabase } from "@/lib/supabase";
-import { useState, useEffect } from "react";
 
 export function Dashboard() {
   type DataType = {
