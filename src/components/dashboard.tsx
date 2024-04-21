@@ -1,40 +1,68 @@
 "use client";
 import Link from "next/link";
-import { JSX, SVGProps, useEffect, useState } from "react";
+import { JSX, SVGProps } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Leaderboard } from "./leaderboard";
 import { supabase } from "@/lib/supabase";
+import { useState, useEffect } from "react";
+import React from "react";
 
 export function Dashboard() {
+  const images = ["zendaya.webp", "woman.jpg", "sam.webp", "tom.jpg"];
   type DataType = {
     compatability: number;
     id: number;
     matchId: {
       age: string;
       name: string;
-      interest: string;
+      interests: string;
+      location: string;
       images: string[];
     };
+    images: Array<string>;
+
     // Add other user fields here
   };
 
   const [data, setData] = useState<DataType[]>([]);
-  useEffect(() => {
-    async function fetchCompatabilityData() {
-      const { data, error } = await supabase.from("compatability").select("*, matchId(*)").order("compatability", { ascending: false }).limit(4);
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
 
-      if (error) {
-        console.error("Error fetching data:", error);
-        return;
-      }
-      console.log("Compatability data:", data);
-      // Sort the data by the compatability field in descending order
+  async function fetchCompatabilityData() {
+    const { data, error } = await supabase
+      .from("compatability")
+      .select("*, matchId(*)")
+      .order("compatability", { ascending: false })
+      .limit(4);
 
-      setData(data);
+    if (error) {
+      console.error("Error fetching data:", error);
+      return;
     }
 
+    const urls = await Promise.all(
+      images.map(async (imageName) => {
+        const { data, error } = await supabase.storage
+          .from("images")
+          .download(imageName);
+        if (error) {
+          console.error("Error fetching image:", error);
+        } else if (data) {
+          const url = URL.createObjectURL(data);
+          return url;
+        }
+      })
+    );
+
+    setImageUrls(urls.filter(Boolean) as string[]);
+    setData(data);
+    console.log(data);
+  }
+
+  useEffect(() => {
     fetchCompatabilityData();
-  }, []); // Empty array means this effect will run once on mount
+  }, []);
 
   return (
     <div className="flex flex-col h-screen w-full">
@@ -44,30 +72,45 @@ export function Dashboard() {
           <span className="sr-only">Dating Site</span>
         </Link>
         <nav className="ml-auto flex gap-12 text-[#2e2e2e]">
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/dashboard">
+          <Link
+            className="text-sm font-medium hover:underline underline-offset-4"
+            href="/dashboard"
+          >
             Dashboard
           </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/dateplanner">
+          <Link
+            className="text-sm font-medium hover:underline underline-offset-4"
+            href="/dateplanner"
+          >
             Date Planner
           </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/dashboard/profile">
+          <Link
+            className="text-sm font-medium hover:underline underline-offset-4"
+            href="/dashboard/profile"
+          >
             Profile
           </Link>
         </nav>
       </header>
       <main className="flex-1 p-8 w-full">
-        <h2 className="text-6xl font-corm mb-6 w-full items-center flex justify-center">Dashboard</h2>
-        <h2 className="text-4xl font-corm mb-6 w-full">Top Matches of the Week</h2>
+        <h2 className="text-6xl font-corm mb-6 w-full items-center flex justify-center">
+          Dashboard
+        </h2>
+        <h2 className="text-4xl font-corm mb-6 w-full">
+          Top Matches of the Week
+        </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {data.map((user) => (
+          {data.map((user, index) => (
             <UserCard
               compatability={user.compatability}
               age={user.matchId.age}
               name={user.matchId.name}
-              interests={user.matchId.interest}
+              interests={user.matchId.interests}
+              location={user.matchId.location}
               key={user.id}
+              index={index}
+              images={images}
               id={user.id}
-              pfp={user.matchId.images && user.matchId.images[0]}
             />
           ))}
         </div>
@@ -99,23 +142,38 @@ type UserCardProps = {
   age: string;
   interests: string;
   compatability: number;
-  pfp: string;
+  images: Array<string>;
+  key: number;
+  index: number;
+  location: string;
   id: number;
 };
 
-const UserCard: React.FC<UserCardProps> = ({ name, age, interests, compatability, pfp, id }) => {
+const UserCard: React.FC<UserCardProps> = ({
+  name,
+  age,
+  interests,
+  compatability,
+  id,
+  images,
+  index,
+  key,
+  location,
+}) => {
   return (
     <Link href={"/chat/" + id}>
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
         <div
           className="h-[400px] bg-cover bg-center"
           style={{
-            backgroundImage: "url('/placeholder.svg')",
+            backgroundImage: `url('./${name}.jpg')`,
           }}
         />
         <div className="p-8">
           <h3 className="text-2xl ">{name}</h3>
-          <p className="text-gray-400 mb-5 text-md">{age},</p>
+          <p className="text-gray-400 mb-5 text-md">
+            {age}, {location}
+          </p>
           <div className="flex flex-col gap-3 mb-5">
             <p className="text-gray-500">
               <span className="text-gray-700">Interests: </span>
@@ -123,7 +181,10 @@ const UserCard: React.FC<UserCardProps> = ({ name, age, interests, compatability
             </p>
           </div>
           <div className="flex flex-col items-center mt-2">
-            <Progress className="mt-1 h-2 color-[#2e2e2e]" value={compatability} />
+            <Progress
+              className="mt-1 h-2 color-[#2e2e2e]"
+              value={compatability}
+            />
             <span className="ml-2">{compatability}% Compatible</span>
           </div>
         </div>
