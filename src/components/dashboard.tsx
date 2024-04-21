@@ -7,88 +7,38 @@ import { supabase } from "@/lib/supabase";
 import { useState, useEffect } from "react";
 
 export function Dashboard() {
-  const users = [
-    { name: "Jane Doe", age: 25, location: "New York", compatibility: 80 },
-    { name: "John Smith", age: 30, location: "Los Angeles", compatibility: 75 },
-    { name: "Sarah Johnson", age: 28, location: "Chicago", compatibility: 65 },
-    { name: "Michael Brown", age: 32, location: "Miami", compatibility: 55 },
-  ];
   type DataType = {
-    id: number;
-    created_at: string;
-    userId: number;
-    matchId: number;
     compatability: number;
-  };
-  type UserType = {
     id: number;
-    name: string;
-    interest: string;
-    age: string;
-    compatability: number;
+    matchId: {
+      age: string;
+      name: string;
+      interest: string;
+    };
     // Add other user fields here
   };
-  const [userCard, setUserCard] = useState<UserType[]>([]);
 
   const [data, setData] = useState<DataType[]>([]);
   useEffect(() => {
     async function fetchCompatabilityData() {
-      const { data, error } = await supabase.from("compatability").select("*");
+      const { data, error } = await supabase
+        .from("compatability")
+        .select("*, matchId(*)")
+        .order("compatability", { ascending: false })
+        .limit(4);
 
       if (error) {
         console.error("Error fetching data:", error);
         return;
       }
-
+      console.log("Compatability data:", data);
       // Sort the data by the compatability field in descending order
-      const sortedData = data.sort(
-        (a, b) => Number(b.compatability) - Number(a.compatability)
-      );
 
-      // Get the first 4 items
-      const topFour = sortedData.slice(0, 4);
-      setData(topFour);
-
-      console.log("Top four compatability data:", topFour);
-      fetchUserData(topFour);
-    }
-    async function fetchUserData(compatabilityData: DataType[]) {
-      const userIds = compatabilityData.map((item) => item.matchId);
-      console.log("User IDs:", userIds);
-
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .in("id", userIds);
-
-      if (error) {
-        console.error("Error fetching user data:", error);
-        return;
-      }
-
-      console.log("User data:", data);
-      console.log("Compatability data:", compatabilityData);
-
-      const dataWithCompatability = data.map((user) => {
-        const compatability = compatabilityData.find(
-          (item) => item.matchId === user.id
-        )?.compatability;
-        return { ...user, compatability };
-      });
-
-      // Sort the dataWithCompatability array by compatability in descending order
-      const sortedDataWithCompatability = dataWithCompatability.sort(
-        (a, b) => Number(b.compatability) - Number(a.compatability)
-      );
-
-      setUserCard(sortedDataWithCompatability);
+      setData(data);
     }
 
     fetchCompatabilityData();
   }, []); // Empty array means this effect will run once on mount
-  useEffect(() => {
-    console.log("User data:", userCard);
-  }, [userCard]);
 
   return (
     <div className="flex flex-col h-screen w-full">
@@ -126,13 +76,13 @@ export function Dashboard() {
           Top Matches of the Week
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {userCard.map((user) => (
+          {data.map((user) => (
             <UserCard
               compatability={user.compatability}
+              age={user.matchId.age}
+              name={user.matchId.name}
+              interests={user.matchId.interest}
               key={user.id}
-              age={user.age}
-              name={user.name}
-              interests={user.interest}
             />
           ))}
         </div>
