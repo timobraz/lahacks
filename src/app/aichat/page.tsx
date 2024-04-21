@@ -11,7 +11,7 @@ import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import SelectedImages from "@/components/selectedImages";
 import Messages from "@/components/messages";
-import InputForm from "@/components/inputForm"
+import InputForm from "@/components/inputForm";
 import { AIChat } from "@/components/aichat";
 
 const message = {
@@ -51,7 +51,7 @@ export const Page = () => {
           </div>
         </div>
         <div className="h-2/3 w-full">
-          <AIChat/>
+          <AIChat />
           {/* <Chat channelId={""} {...message} /> */}
         </div>
       </div>
