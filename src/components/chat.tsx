@@ -86,7 +86,7 @@ export function Chat({ channelId }: ChatProps) {
         console.error('Error sending message:', error);
       } else {
         console.log("data", data);
-        setMessages([...messages, { ...newMessage, id: data.id }]);
+        setMessages([...messages, { ...newMessage, id: data?.id }]);
         setInputValue('');
       }
     } catch (err) {
@@ -150,36 +150,35 @@ export function Chat({ channelId }: ChatProps) {
               <div className="text-center text-gray-500 dark:text-gray-400">No messages yet. Start a new conversation!</div>
             ) : (
               <div className="grid gap-4">
-                console.log(messages);
-                {messages.map((message, index) => {
-                  return (
-                    <div key={index} className={`flex items-start space-x-4 ${message.author.id === 1 ? "" : "justify-end"}`}>
-                      {message.author.id === 1 ? (
-                        <Avatar>
-                          <AvatarImage alt="Chatbot 1" src="/chatbot1.png" />
-                          <AvatarFallback>CB1</AvatarFallback>
-                        </Avatar>
-                      ) : (
-                        <div className="flex-1 space-y-2"></div>
-                      )}
+                  {messages.map((message, index) => {
+                    return (
                       <div
-                        className={`flex-1 space-y-2 ${
-                          message.author.id === 1 ? "bg-gray-100 dark:bg-gray-700" : "bg-[#FFA7A7]"
-                        } rounded-lg p-4 text-sm ${message.author.id === 1 ? "" : "text-white"}`}
+                        key={index}
+                        className={`flex items-start space-x-4 ${message.author?.id === 1 ? "" : "justify-end"
+                          }`}
                       >
-                        <p>{message.message}</p>
+                        {message.author?.id === 1 ? (
+                          <Avatar>
+                            <AvatarImage alt="Chatbot 1" src="/chatbot1.png" />
+                            <AvatarFallback>CB1</AvatarFallback>
+                          </Avatar>
+                        ) : message.author ? (
+                          <>
+                            <div className="flex-1"></div>
+                            <div
+                              className={`flex-1 bg-[#FFA7A7] rounded-lg p-4 text-sm text-white`}
+                            >
+                              <p>{message.message}</p>
+                            </div>
+                            <Avatar>
+                              <AvatarImage alt="Chatbot 2" src="/chatbot2.png" />
+                              <AvatarFallback>CB2</AvatarFallback>
+                            </Avatar>
+                          </>
+                        ) : null}
                       </div>
-                      {message.author.id === 2 ? (
-                        <Avatar>
-                          <AvatarImage alt="Chatbot 2" src="/chatbot2.png" />
-                          <AvatarFallback>CB2</AvatarFallback>
-                        </Avatar>
-                      ) : (
-                        <div className="flex-1 space-y-2"></div>
-                      )}
-                    </div>
-                  );
-                })}
+                    );
+                  })}
               </div>
             )}
           </div>
