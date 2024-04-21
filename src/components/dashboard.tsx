@@ -1,7 +1,10 @@
+"use client";
 import Link from "next/link";
 import { JSX, SVGProps } from "react";
 import { Progress } from "@/components/ui/progress";
 import { Leaderboard } from "./leaderboard";
+import { supabase } from "@/lib/supabase";
+import { useState, useEffect } from "react";
 
 export function Dashboard() {
   const users = [
@@ -10,6 +13,82 @@ export function Dashboard() {
     { name: "Sarah Johnson", age: 28, location: "Chicago", compatibility: 65 },
     { name: "Michael Brown", age: 32, location: "Miami", compatibility: 55 },
   ];
+  type DataType = {
+    id: number;
+    created_at: string;
+    userId: number;
+    matchId: number;
+    compatability: number;
+  };
+  type UserType = {
+    id: number;
+    name: string;
+    interest: string;
+    age: string;
+    compatability: number;
+    // Add other user fields here
+  };
+  const [userCard, setUserCard] = useState<UserType[]>([]);
+
+  const [data, setData] = useState<DataType[]>([]);
+  useEffect(() => {
+    async function fetchCompatabilityData() {
+      const { data, error } = await supabase.from("compatability").select("*");
+
+      if (error) {
+        console.error("Error fetching data:", error);
+        return;
+      }
+
+      // Sort the data by the compatability field in descending order
+      const sortedData = data.sort(
+        (a, b) => Number(b.compatability) - Number(a.compatability)
+      );
+
+      // Get the first 4 items
+      const topFour = sortedData.slice(0, 4);
+      setData(topFour);
+
+      console.log("Top four compatability data:", topFour);
+      fetchUserData(topFour);
+    }
+    async function fetchUserData(compatabilityData: DataType[]) {
+      const userIds = compatabilityData.map((item) => item.matchId);
+      console.log("User IDs:", userIds);
+
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .in("id", userIds);
+
+      if (error) {
+        console.error("Error fetching user data:", error);
+        return;
+      }
+
+      console.log("User data:", data);
+      console.log("Compatability data:", compatabilityData);
+
+      const dataWithCompatability = data.map((user) => {
+        const compatability = compatabilityData.find(
+          (item) => item.matchId === user.id
+        )?.compatability;
+        return { ...user, compatability };
+      });
+
+      // Sort the dataWithCompatability array by compatability in descending order
+      const sortedDataWithCompatability = dataWithCompatability.sort(
+        (a, b) => Number(b.compatability) - Number(a.compatability)
+      );
+
+      setUserCard(sortedDataWithCompatability);
+    }
+
+    fetchCompatabilityData();
+  }, []); // Empty array means this effect will run once on mount
+  useEffect(() => {
+    console.log("User data:", userCard);
+  }, [userCard]);
 
   return (
     <div className="flex flex-col h-screen w-full">
@@ -47,11 +126,15 @@ export function Dashboard() {
           Top Matches of the Week
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {users
-            .sort((a, b) => b.compatibility - a.compatibility)
-            .map((user) => (
-              <UserCard key={user.name} {...user} />
-            ))}
+          {userCard.map((user) => (
+            <UserCard
+              compatability={user.compatability}
+              key={user.id}
+              age={user.age}
+              name={user.name}
+              interests={user.interest}
+            />
+          ))}
         </div>
       </main>
     </div>
@@ -78,16 +161,16 @@ function HeartIcon(props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) {
 }
 type UserCardProps = {
   name: string;
-  age: number;
-  location: string;
-  compatibility: number;
+  age: string;
+  interests: string;
+  compatability: number;
 };
 
 const UserCard: React.FC<UserCardProps> = ({
   name,
   age,
-  location,
-  compatibility,
+  interests,
+  compatability,
 }) => {
   return (
     <Link href="/chat/1">
@@ -100,21 +183,19 @@ const UserCard: React.FC<UserCardProps> = ({
         />
         <div className="p-8">
           <h3 className="text-2xl ">{name}</h3>
-          <p className="text-gray-400 mb-5 text-md">
-            {age}, {location}
-          </p>
+          <p className="text-gray-400 mb-5 text-md">{age},</p>
           <div className="flex flex-col gap-3 mb-5">
             <p className="text-gray-500">
               <span className="text-gray-700">Interests: </span>
-              Soccer, Football, Rowing
+              {interests}
             </p>
           </div>
           <div className="flex flex-col items-center mt-2">
             <Progress
               className="mt-1 h-2 color-[#2e2e2e]"
-              value={compatibility}
+              value={compatability}
             />
-            <span className="ml-2">{compatibility}% Compatible</span>
+            <span className="ml-2">{compatability}% Compatible</span>
           </div>
         </div>
       </div>
