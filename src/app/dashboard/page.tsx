@@ -1,6 +1,7 @@
 import React from "react";
 import { Leaderboard } from "@/components/leaderboard";
 import { Back } from "@/components/back";
+import { Dashboard } from "@/components/dashboard";
 const matches = {
   matches: [
     { name: "Olivia Davis", compatibility: 92 },
@@ -13,9 +14,7 @@ const matches = {
 export const Page = () => {
   return (
     <div className="w-screen h-screen bg-gray-100 p-5">
-      <div className="flex w-1/2 pb-10 border-2 rounded-lg p-5 absolute left-1/4 top-1/4 bg-white">
-        <Leaderboard />
-      </div>
+      <Dashboard />
     </div>
   );
 };

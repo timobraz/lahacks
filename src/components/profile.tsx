@@ -140,10 +140,10 @@ export function Profile() {
                   </div>
                   <div className="flex items-center gap-2 mt-5">
                     <span className="text-sm font-medium">
-                      {currentQuestion === 7 ? "Submit" : "Next"}
+                      {currentQuestion === 8 ? "Submit" : "Next"}
                     </span>
                     <Link
-                      href={`/${currentQuestion === 7 ? "aichat" : "profile"}`}
+                      href={`/${currentQuestion === 8 ? "aichat" : "profile"}`}
                     >
                       <Button
                         size="icon"
