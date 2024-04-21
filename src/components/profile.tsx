@@ -5,12 +5,16 @@ import { ImageInput } from "./image-input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Back } from "./back";
 import { supabase } from "@/lib/supabase";
+import Image from "next/image";
 
 export function Profile() {
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
   async function fetchUser() {
     const { data, error } = await supabase
       .from("users")
@@ -34,6 +38,7 @@ export function Profile() {
         interests: interests,
         bio: bio,
         pfp: null,
+        images: uploadedImages,
       },
     ]);
 
@@ -52,6 +57,7 @@ export function Profile() {
   const [genderPreference, setGenderPreference] = useState("Female");
   const [musicTaste, setMusicTaste] = useState("Rock");
   const [location, setLocation] = useState("San Fransisco, CA");
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [interests, setInterests] = useState(
     "Hiking, Camping, Reading, Cooking"
   );
@@ -78,6 +84,28 @@ export function Profile() {
       return prevQuestion;
     });
   };
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      const urls = await Promise.all(
+        uploadedImages.map(async (imageName) => {
+          const { data, error } = await supabase.storage
+            .from("images")
+            .download(imageName);
+          if (error) {
+            console.error("Error fetching image:", error);
+          } else if (data) {
+            const url = URL.createObjectURL(data);
+            return url;
+          }
+        })
+      );
+
+      setImageUrls(urls.filter(Boolean) as string[]);
+    };
+
+    fetchImages();
+  }, [uploadedImages]);
 
   const questions = [
     { question: "Name", placeholder: "Enter your name", function: setName },
@@ -148,7 +176,12 @@ export function Profile() {
             )
           )}
           <div className={`w-2/3  ${currentQuestion === 8 ? "" : "hidden"}`}>
-            <ImageInput></ImageInput>
+            <ImageInput
+              onUpload={(images) => {
+                setUploadedImages(images);
+                console.log("Uploaded Images: ", images);
+              }}
+            />
           </div>
 
           <div className="flex justify-between w-2/3">
@@ -224,32 +257,32 @@ export function Profile() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <img
-              alt="Image 1"
+            <Image
+              alt="/placeholder.svg"
               className="aspect-video rounded-md object-cover"
               height={200}
-              src="/placeholder.svg"
+              src={imageUrls[0] ? imageUrls[0] : "/placeholder.svg"}
               width={300}
             />
-            <img
+            <Image
               alt="Image 2"
               className="aspect-video rounded-md object-cover"
               height={200}
-              src="/placeholder.svg"
+              src={imageUrls[1] ? imageUrls[1] : "/placeholder.svg"}
               width={300}
             />
-            <img
+            <Image
               alt="Image 3"
               className="aspect-video rounded-md object-cover"
               height={200}
-              src="/placeholder.svg"
+              src={imageUrls[2] ? imageUrls[2] : "/placeholder.svg"}
               width={300}
             />
-            <img
+            <Image
               alt="Image 4"
               className="aspect-video rounded-md object-cover"
               height={200}
-              src="/placeholder.svg"
+              src={imageUrls[3] ? imageUrls[3] : "/placeholder.svg"}
               width={300}
             />
           </div>
