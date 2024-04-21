@@ -1,26 +1,48 @@
 "use client";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { RadioGroupItem, RadioGroup } from "@/components/ui/radio-group";
 import { JSX, SVGProps } from "react";
 import { ImageInput } from "./image-input";
-
-import {
-  SelectValue,
-  SelectTrigger,
-  SelectItem,
-  SelectContent,
-  Select,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
 import { useState } from "react";
 import Link from "next/link";
 import { Back } from "./back";
-import { Next } from "./next";
+import { supabase } from "@/lib/supabase";
 
 export function Profile() {
+  async function fetchUser() {
+    const { data, error } = await supabase
+      .from("users")
+      .select("*")
+      .eq("id", 1);
+
+    if (error) {
+      console.error("Error fetching user:", error);
+    } else {
+      console.log("User:", data);
+    }
+  }
+  async function createUser() {
+    const { data, error } = await supabase.from("users").insert([
+      {
+        name: name,
+        age: age,
+        gender: gender,
+        genderPreference: genderPreference,
+        location: location,
+        interests: interests,
+        bio: bio,
+        pfp: null,
+      },
+    ]);
+
+    if (error) {
+      console.error("Error creating user:", error);
+    } else {
+      console.log("User created:", data);
+    }
+  }
   function capitalizeFirstLetter(string: string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
@@ -146,7 +168,11 @@ export function Profile() {
               </Button>
               <span className="text-sm font-medium">Next</span>
             </div>
-            <div className="flex items-center gap-2 mt-5">
+            <div
+              onClick={currentQuestion === 8 ? createUser : () => {}}
+              className="flex items-center gap-2 mt-5"
+            >
+              {" "}
               <span className="text-sm font-medium">
                 {currentQuestion === 8 ? "Submit" : "Next"}
               </span>
