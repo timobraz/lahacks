@@ -162,7 +162,7 @@ const UserCard: React.FC<UserCardProps> = ({
 }) => {
   return (
     <Link href={"/chat/" + id}>
-      <div className="bg-white shadow-md rounded-lg overflow-hidden">
+      <div className="bg-white shadow-md rounded-lg overflow-hidden h-[650px]">
         <div
           className="h-[400px] bg-cover bg-center"
           style={{
